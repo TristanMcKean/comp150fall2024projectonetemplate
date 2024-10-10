@@ -1,6 +1,6 @@
 {
     "name": "COMP150SP2024ProjectOne",
-    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "image": "mcr.microsoft.com/devcontainers/python:3.12.6",
     "settings": { 
         "terminal.integrated.shell.linux": "/bin/bash"
     },

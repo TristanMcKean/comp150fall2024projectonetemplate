@@ -28,7 +28,7 @@ class Statistic:
 
 
 class Character:
-    def __init__(self, name: str = "Bob"):
+    def __init__(self, name: str = "Bobby"):
         self.name = name
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
         self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")

@@ -13,18 +13,41 @@ class EventStatus(Enum):
 
 
 class Statistic:
-    def __init__(self, name: str, value: int = 0, description: str = "", min_value: int = 0, max_value: int = 100):
+    def __init__(self, name: str, hero_class: str, health: int = 0, attack_power: int):
         self.name = name
-        self.value = value
-        self.description = description
-        self.min_value = min_value
-        self.max_value = max_value
+        self.hero_class = hero_class
+        self.health = health
+        self.attack_power = attack_power
+        self.inventory = []
 
     def __str__(self):
-        return f"{self.name}: {self.value}"
+        return f"{self.name} ({self.hero_class}) - HP: {self.health}, AP: {self.attack_power}"
 
-    def modify(self, amount: int):
-        self.value = max(self.min_value, min(self.max_value, self.value + amount))
+    def is_alive(self):
+        return self.health > 0 
+
+    def attack(self, target: "Character"):
+        success_chance = random.randint(1,100)
+        if success_chance <= 70 
+            damage = random.randint (1, self.attack_power)
+            target.health -= damage 
+            print (f"{self.name} attacks {target.name} for {damage} damage!")
+        else:
+            print(f"{self.name}'s attack missed!")
+
+    def add_item(self, item: str):
+        self.inventory.append(item)
+
+    def use_item(self, item: str): 
+        if item in self.inventory
+            print (f"{self.name} uses {item}."
+            if item == "Health Potion":
+                self.health += 20  # Heal for 20 HP
+                print(f"{self.name} heals for 20 HP!")
+            self.inventory.remove(item)
+
+    def show_inventory(self):
+        return self.inventory
 
 
 class Character:

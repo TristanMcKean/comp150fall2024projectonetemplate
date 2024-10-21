@@ -1,7 +1,7 @@
 import json
 import sys
 import random
-from typing import List, Optional
+from typing import List
 from enum import Enum
 
 
@@ -13,7 +13,7 @@ class EventStatus(Enum):
 
 
 class Statistic:
-    def __init__(self, name: str, hero_class: str, health: int = 0, attack_power: int):
+    def __init__(self, name: str, hero_class: str, health: int = 0, attack_power: int = 0):
         self.name = name
         self.hero_class = hero_class
         self.health = health
@@ -24,26 +24,26 @@ class Statistic:
         return f"{self.name} ({self.hero_class}) - HP: {self.health}, AP: {self.attack_power}"
 
     def is_alive(self):
-        return self.health > 0 
+        return self.health > 0
 
     def attack(self, target: "Character"):
-        success_chance = random.randint(1,100)
-        if success_chance <= 70 
-            damage = random.randint (1, self.attack_power)
-            target.health -= damage 
-            print (f"{self.name} attacks {target.name} for {damage} damage!")
+        success_chance = random.randint(1, 100)
+        if success_chance <= 70:
+            damage = random.randint(1, self.attack_power)
+            target.health -= damage
+            print(f"{self.name} attacks {target.name} for {damage} damage!")
         else:
             print(f"{self.name}'s attack missed!")
 
     def add_item(self, item: str):
         self.inventory.append(item)
 
-    def use_item(self, item: str): 
-        if item in self.inventory
-            print (f"{self.name} uses {item}."
-            if item == "Health Potion":
-                self.health += 20  # Heal for 20 HP
-                print(f"{self.name} heals for 20 HP!")
+    def use_item(self, item: str):
+        if item in self.inventory:
+            print(f"{self.name} uses {item}.")
+            if item == "Vibranium Shield":
+                self.health += 30  # Heals for 30 HP
+                print(f"{self.name} heals for 30 HP with Vibranium Shield!")
             self.inventory.remove(item)
 
     def show_inventory(self):
@@ -51,17 +51,34 @@ class Statistic:
 
 
 class Character:
-    def __init__(self, name: str = "Boby"):
+    def __init__(self, name: str):
         self.name = name
-        self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
-        self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")
-        # Add more stats as needed
+        # Adding Marvel heroes and their stats
+        if name == "Iron Man":
+            self.strength = Statistic("Strength", "Genius", health=100, attack_power=15)
+            self.intelligence = Statistic("Intelligence", "Genius", health=100, attack_power=25)
+        elif name == "Captain America":
+            self.strength = Statistic("Strength", "Super Soldier", health=120, attack_power=20)
+            self.endurance = Statistic("Endurance", "Super Soldier", health=120, attack_power=15)
+        elif name == "Thor":
+            self.strength = Statistic("Strength", "Asgardian", health=150, attack_power=30)
+            self.magic = Statistic("Magic", "Asgardian", health=150, attack_power=25)
+        else:
+            # Default character if the name doesn't match
+            self.strength = Statistic("Strength", "Hero", health=100, attack_power=10)
+            self.intelligence = Statistic("Intelligence", "Hero", health=100, attack_power=10)
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
 
     def get_stats(self):
-        return [self.strength, self.intelligence]  # Extend this list if there are more stats
+        # Depending on the hero, there might be different stats
+        if self.name == "Captain America":
+            return [self.strength, self.endurance]
+        elif self.name == "Thor":
+            return [self.strength, self.magic]
+        else:
+            return [self.strength, self.intelligence]
 
 
 class Event:
@@ -125,17 +142,17 @@ class UserInputParser:
         return input(prompt)
 
     def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a party member:")
+        print("Choose a Marvel hero:")
         for idx, member in enumerate(party):
             print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen party member: ")) - 1
+        choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
         return party[choice]
 
     def select_stat(self, character: Character) -> Statistic:
         print(f"Choose a stat for {character.name}:")
         stats = character.get_stats()
         for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} ({stat.value})")
+            print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
         choice = int(self.parse("Enter the number of the stat to use: ")) - 1
         return stats[choice]
 
@@ -148,7 +165,7 @@ def load_events_from_json(file_path: str) -> List[Event]:
 
 def start_game():
     parser = UserInputParser()
-    characters = [Character(f"Character_{i}") for i in range(3)]
+    characters = [Character("Iron Man"), Character("Captain America"), Character("Thor")]
 
     # Load events from the JSON file
     events = load_events_from_json('project_code/location_events/location_1.json')

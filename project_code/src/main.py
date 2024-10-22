@@ -26,15 +26,39 @@ class Statistic:
     def is_alive(self):
         return self.health > 0
 
-    def attack(self, target: "Character"):
-        success_chance = random.randint(1, 100)
-        if success_chance <= 70:
-            damage = random.randint(1, self.attack_power)
-            target.health -= damage
-            print(f"{self.name} attacks {target.name} for {damage} damage!")
+    def attack(self, target: "Statistic"):
+        print(f"Do you want to use {self.name}'s special move? (y/n)")
+        use_special = input().strip().lower()
+        if use_special == 'y':
+            self.special_move(target)  # Call special move if chosen
         else:
-            print(f"{self.name}'s attack missed!")
+            success_chance = random.randint(1, 100)
+            if success_chance <= 70:
+                damage = random.randint(1, self.attack_power)
+                target.health -= damage
+                print(f"{self.name} attacks {target.name} for {damage} damage!")
+            else:
+                print(f"{self.name}'s attack missed!")
 
+    def special_move(self, target: "Statistic"):
+        # Different special moves based on hero class
+        if self.hero_class == "Genius":
+            print(f"{self.name} uses Repulsor Blast!")
+            success_chance = random.randint(1, 100)
+            if success_chance <= 50:
+                damage = random.randint(25, 50)
+                target.health -= damage
+                print(f"{self.name} hits {target.name} for {damage} damage with Repulsor Blast!")
+        elif self.hero_class == "Asgardian":
+            print(f"{self.name} uses Mjolnir Strike!")
+            damage = random.randint(15, 40)
+            target.health -= damage
+            print(f"{self.name} hits {target.name} for {damage} damage with Mjolnir!")
+        elif self.hero_class == "Super Soldier":
+            print(f"{self.name} uses Shield Block!")
+            self.health += 20
+            print(f"{self.name} heals 20 HP with Shield Block!")
+  
     def add_item(self, item: str):
         self.inventory.append(item)
 
@@ -81,6 +105,20 @@ class Character:
             return [self.strength, self.intelligence]
 
 
+class Enemy(Statistic):
+    def __init__(self, name: str, health: int, attack_power: int):
+        super().__init__(name, "Villain", health, attack_power)
+
+    def attack(self, target: "Statistic"):
+        success_chance = random.randint(1, 100)
+        if success_chance <= 60:
+            damage = random.randint(5, self.attack_power)
+            target.health -= damage
+            print(f"{self.name} attacks {target.name} for {damage} damage!")
+        else:
+            print(f"{self.name}'s attack missed!")
+
+
 class Event:
     def __init__(self, data: dict):
         self.primary_attribute = data['primary_attribute']
@@ -108,6 +146,17 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
+class FinalBoss(Event):
+    def __init__(self):
+        super().__init__({
+            'primary_attribute': 'Strength',
+            'secondary_attribute': 'Endurance',
+            'prompt_text': 'Thanos has arrived! Can you stop him?',
+            'pass': {'message': 'You defeat Thanos and save the universe!'},
+            'fail': {'message': 'Thanos defeats you, and the universe falls into chaos!'},
+            'partial_pass': {'message': 'You wound Thanos but he escapes for now.'}
+        }) 
+
 
 class Location:
     def __init__(self, events: List[Event]):
@@ -134,7 +183,30 @@ class Game:
         print("Game Over.")
 
     def check_game_over(self):
-        return len(self.party) == 0
+    # Check if all party members are defeated
+    if all(not member.is_alive() for member in self.party):
+        print("Your party has been defeated. Game Over!")
+        self.continue_playing = False
+        return True  # Game over
+    
+    # If Thanos hasn't been defeated, trigger the final battle
+    elif not self.defeated_thanos:
+        print("Final Battle! Thanos has arrived!")
+        thanos_battle = FinalBoss()
+        thanos_battle.execute(self.party, self.parser)
+        
+        if thanos_battle.status == EventStatus.PASS:
+            self.defeated_thanos = True
+            print("Congratulations, you have defeated Thanos and won the game!")
+            return True  # Game over with victory
+        
+        elif thanos_battle.status == EventStatus.FAIL:
+            print("Thanos defeated your team. Game Over.")
+            self.continue_playing = False
+            return True  # Game over with defeat
+
+    # Continue playing if none of the above conditions triggered a game over
+    return False
 
 
 class UserInputParser:

@@ -332,12 +332,12 @@ enemies = [
 
 
     # Define Marvel characters
-    iron_man = Character("Iron Man")
-    captain_america = Character("Captain America")
-    thor = Character("Thor")
+iron_man = Character("Iron Man")
+captain_america = Character("Captain America")
+thor = Character("Thor")
 
     # Load events from JSON file or define some in code
-    event_data = [
+event_data = [
         {
             "primary_attribute": "Strength",
             "secondary_attribute": "Intelligence",
@@ -356,10 +356,10 @@ enemies = [
         }
     ]
 
-    events = [Event(e) for e in event_data]
+events = [Event(e) for e in event_data]
 
     # Define locations
-    city = Location(events)
+city = Location(events)
 
-    game = Game(parser, [iron_man, captain_america, thor], [city])
-    game.start()
+game = Game(parser, [iron_man, captain_america, thor], [city])
+game.start()

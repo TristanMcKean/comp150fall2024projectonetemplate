@@ -324,6 +324,13 @@ def test_input_validation():
 if __name__ == "__main__":
     parser = UserInputParser()
 
+enemies = [
+    Enemy(name="Loki", health=80, attack_power=10),
+    Enemy(name="Ultron", health=100, attack_power=15),
+    Enemy(name="Thanos", health=200, attack_power=25),  # Final Boss
+]
+
+
     # Define Marvel characters
     iron_man = Character("Iron Man")
     captain_america = Character("Captain America")

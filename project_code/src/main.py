@@ -165,6 +165,37 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
+class EnemyEncounter(Event):
+    def __init__(self, enemy: Enemy, data: dict):
+        super().__init__(data)
+        self.enemy = enemy  # Add an enemy to the event
+
+    def execute(self, party: List[Character], parser):
+        print(self.prompt_text)
+        
+        # The player selects a hero to battle the enemy
+        character = parser.select_party_member(party)
+        chosen_stat = parser.select_stat(character)
+
+        # Resolve the combat between the character and the enemy
+        self.resolve_combat(character, chosen_stat)
+
+    def resolve_combat(self, character: Character, chosen_stat: Statistic):
+        print(f"{character.name} encounters the villain {self.enemy.name}!")
+        
+        while character.is_alive() and self.enemy.is_alive():
+            # Character attacks the enemy
+            chosen_stat.attack(self.enemy)
+            if self.enemy.is_alive():
+                self.enemy.attack(chosen_stat)
+        
+        if not self.enemy.is_alive():
+            print(f"{character.name} defeats {self.enemy.name}!")
+            self.status = EventStatus.PASS
+        elif not character.is_alive():
+            print(f"{self.enemy.name} defeats {character.name}!")
+            self.status = EventStatus.FAIL
+
 
 class FinalBoss(Event):
     def __init__(self):

@@ -324,20 +324,20 @@ def test_input_validation():
 if __name__ == "__main__":
     parser = UserInputParser()
 
-enemies = [
-    Enemy(name="Loki", health=80, attack_power=10),
-    Enemy(name="Ultron", health=100, attack_power=15),
-    Enemy(name="Thanos", health=200, attack_power=25),  # Final Boss
-]
-
+    # Define enemies
+    enemies = [
+        Enemy(name="Loki", health=80, attack_power=10),
+        Enemy(name="Ultron", health=100, attack_power=15),
+        Enemy(name="Thanos", health=200, attack_power=25)  # Final Boss
+    ]
 
     # Define Marvel characters
-iron_man = Character("Iron Man")
-captain_america = Character("Captain America")
-thor = Character("Thor")
+    iron_man = Character("Iron Man")
+    captain_america = Character("Captain America")
+    thor = Character("Thor")
 
     # Load events from JSON file or define some in code
-event_data = [
+    event_data = [
         {
             "primary_attribute": "Strength",
             "secondary_attribute": "Intelligence",
@@ -356,10 +356,15 @@ event_data = [
         }
     ]
 
-events = [Event(e) for e in event_data]
+    # Create event instances with corresponding enemies
+    events = [
+        Event(data, enemy) for data, enemy in zip(event_data, enemies)
+    ]
 
     # Define locations
-city = Location(events)
+    city = Location(events)
 
-game = Game(parser, [iron_man, captain_america, thor], [city])
-game.start()
+    # Start the game
+    game = Game(parser, [iron_man, captain_america, thor], [city])
+    game.start()
+    

@@ -95,14 +95,15 @@ class Character:
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
 
-    def get_stats(self):
-        # Depending on the hero, there might be different stats
-        if self.name == "Captain America":
-            return [self.strength, self.endurance]
+    def get_special_moves(self):
+        moves = []
+        if self.name == "Iron Man":
+            moves = ["Repulsor Blast"]
+        elif self.name == "Captain America":
+            moves = ["Shield Block"]
         elif self.name == "Thor":
-            return [self.strength, self.magic]
-        else:
-            return [self.strength, self.intelligence]
+            moves = ["Mjolnir Strike"]
+        return moves
 
     def is_alive(self):
         # Check if any of the character's stats are still alive
@@ -146,16 +147,20 @@ class Event:
     def execute(self, party: List[Character], parser):
         print(self.prompt_text)
         character = parser.select_party_member(party)
-        chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
+        chosen_move = parser.select_special_move(character)
+        self.resolve_choice(character, chosen_move)
 
-    def resolve_choice(self, character: Character, chosen_stat: Statistic):
-        if chosen_stat.name == self.primary_attribute:
-            self.status = EventStatus.PASS
-            print(self.pass_message)
-        elif chosen_stat.name == self.secondary_attribute:
-            self.status = EventStatus.PARTIAL_PASS
-            print(self.partial_pass_message)
+    def resolve_choice(self, character: Character, chosen_move: str):
+        # Simulating the effect of the chosen special move
+        character.special_move(character)  # Using special move on itself for simplicity
+
+        if chosen_move in [self.primary_attribute, self.secondary_attribute]:
+            if chosen_move == self.primary_attribute:
+                self.status = EventStatus.PASS
+                print(self.pass_message)
+            else:
+                self.status = EventStatus.PARTIAL_PASS
+                print(self.partial_pass_message)
         else:
             self.status = EventStatus.FAIL
             print(self.fail_message)
@@ -231,103 +236,33 @@ class UserInputParser:
     def select_party_member(self, party: List[Character]) -> Character:
         print("Choose a Marvel hero:")
         for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-    
-        while True:
-            try:
-                choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
-                if 0 <= choice < len(party):
-                    return party[choice]
-                else:
-                    print("Incorrect input, choose a correct input.")
-            except ValueError:
-                print("Incorrect input, choose a correct input.")
+                        print(f"{idx + 1}. {member.name}")
+        choice = int(self.parse("Select a character (number): ")) - 1
+        return party[choice]
 
-    def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
-        stats = character.get_stats()
-        for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
-
-        while True:
-            try:
-                choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-                if 0 <= choice < len(stats):
-                    return stats[choice]
-                else:
-                    print("Incorrect input, choose a correct input.")
-            except ValueError:
-                print("Incorrect input, choose a correct input.")
-
-
-# Test function to validate that input is handled correctly
-def test_input_validation():
-    parser = UserInputParser()
-
-    # Mock Characters for testing
-    iron_man = Character("Iron Man")
-    captain_america = Character("Captain America")
-    thor = Character("Thor")
-    party = [iron_man, captain_america, thor]
-
-    # Simulating valid and invalid inputs for character selection
-    print("Testing Character Selection with Invalid Inputs:")
-    test_inputs = ["abc", "0", "4", "2"]  # invalid inputs first, then a valid input
-    for input_value in test_inputs:
-        # Patch the input() function to return predefined test inputs
-        parser.parse = lambda _: input_value  # Override input() to return test values
-        try:
-            selected_hero = parser.select_party_member(party)
-            print(f"Selected Hero: {selected_hero.name}")
-            break  # Once a valid hero is selected, break out of loop
-        except Exception as e:
-            print(e)
-
-    # Simulating valid and invalid inputs for stat selection
-    print("\nTesting Stat Selection with Invalid Inputs:")
-    test_inputs = ["xyz", "0", "3", "1"]  # invalid inputs first, then a valid input
-    for input_value in test_inputs:
-        parser.parse = lambda _: input_value  # Override input() to return test values
-        try:
-            selected_stat = parser.select_stat(iron_man)
-            print(f"Selected Stat: {selected_stat.name}")
-            break  # Once a valid stat is selected, break out of loop
-        except Exception as e:
-            print(e)
+    def select_special_move(self, character: Character) -> str:
+        print(f"Available special moves for {character.name}:")
+        moves = character.get_special_moves()
+        for idx, move in enumerate(moves):
+            print(f"{idx + 1}. {move}")
+        choice = int(self.parse("Select a special move (number): ")) - 1
+        return moves[choice]
 
 
 if __name__ == "__main__":
-    parser = UserInputParser()
-
-    # Define Marvel characters
+    # Example character initialization
     iron_man = Character("Iron Man")
     captain_america = Character("Captain America")
     thor = Character("Thor")
 
-    # Load events from JSON file or define some in code
-    event_data = [
-        {
-            "primary_attribute": "Strength",
-            "secondary_attribute": "Intelligence",
-            "prompt_text": "A powerful enemy is attacking the city!",
-            "pass": {"message": "You defeat the enemy!"},
-            "fail": {"message": "The enemy defeats you!"},
-            "partial_pass": {"message": "You drive the enemy away, but they cause some damage."}
-        },
-        {
-            "primary_attribute": "Endurance",
-            "secondary_attribute": "Strength",
-            "prompt_text": "A building is collapsing, can you hold it up?",
-            "pass": {"message": "You save the building and everyone inside!"},
-            "fail": {"message": "The building collapses."},
-            "partial_pass": {"message": "You save some people, but the building is lost."}
-        }
-    ]
+    # Create a party with characters
+    characters = [iron_man, captain_america, thor]
 
-    events = [Event(e) for e in event_data]
+    # Initialize events and locations
+    locations = [Location([FinalBoss()])]
 
-    # Define locations
-    city = Location(events)
-
-    game = Game(parser, [iron_man, captain_america, thor], [city])
+    # Start the game
+    parser = UserInputParser()
+    game = Game(parser, characters, locations)
     game.start()
+

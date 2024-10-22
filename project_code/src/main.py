@@ -134,7 +134,7 @@ class Enemy(Statistic):
 
 
 class Event:
-    def __init__(self, data: dict):
+    def __init__(self, data: dict, enemy: Enemy = None):
         self.primary_attribute = data['primary_attribute']
         self.secondary_attribute = data['secondary_attribute']
         self.prompt_text = data['prompt_text']
@@ -142,12 +142,37 @@ class Event:
         self.fail_message = data['fail']['message']
         self.partial_pass_message = data['partial_pass']['message']
         self.status = EventStatus.UNKNOWN
+        self.enemy = enemy  # Store the enemy if there is one
 
     def execute(self, party: List[Character], parser):
         print(self.prompt_text)
-        character = parser.select_party_member(party)
-        chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
+        if self.enemy:
+            print(f"An enemy {self.enemy.name} appears!")
+            self.battle_with_enemy(party, parser)
+        else:
+            character = parser.select_party_member(party)
+            chosen_stat = parser.select_stat(character)
+            self.resolve_choice(character, chosen_stat)
+
+    def battle_with_enemy(self, party: List[Character], parser):
+        # Logic for battling the enemy
+        while self.enemy.is_alive() and any(member.is_alive() for member in party):
+            for member in party:
+                if member.is_alive():
+                    character = member
+                    chosen_stat = parser.select_stat(character)
+                    character.attack(self.enemy)
+
+                    if not self.enemy.is_alive():
+                        print(f"{self.enemy.name} has been defeated!")
+                        self.status = EventStatus.PASS
+                        break
+                if self.enemy.is_alive():
+                    self.enemy.attack(character)
+
+        if not any(member.is_alive() for member in party):
+            print("Your party has been defeated!")
+            self.status = EventStatus.FAIL
 
     def resolve_choice(self, character: Character, chosen_stat: Statistic):
         if chosen_stat.name == self.primary_attribute:

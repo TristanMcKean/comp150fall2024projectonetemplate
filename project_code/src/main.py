@@ -183,17 +183,16 @@ class Game:
         print("Game Over.")
 
     def check_game_over(self):
-    # Check if all party members are defeated
-    if all(not member.is_alive() for member in self.party):
-        print("Your party has been defeated. Game Over!")
-        self.continue_playing = False
-        return True  # Game over
+        if all(not member.is_alive() for member in self.party):
+            print("Your party has been defeated. Game Over!")
+            self.continue_playing = False
+            return True  # Game over
     
     # If Thanos hasn't been defeated, trigger the final battle
-    elif not self.defeated_thanos:
-        print("Final Battle! Thanos has arrived!")
-        thanos_battle = FinalBoss()
-        thanos_battle.execute(self.party, self.parser)
+        elif not self.defeated_thanos:
+            print("Final Battle! Thanos has arrived!")
+            thanos_battle = FinalBoss()
+            thanos_battle.execute(self.party, self.parser)
         
         if thanos_battle.status == EventStatus.PASS:
             self.defeated_thanos = True
@@ -206,7 +205,7 @@ class Game:
             return True  # Game over with defeat
 
     # Continue playing if none of the above conditions triggered a game over
-    return False
+        return False
 
 
 class UserInputParser:

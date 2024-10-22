@@ -58,7 +58,7 @@ class Statistic:
             print(f"{self.name} uses Shield Block!")
             self.health += 20
             print(f"{self.name} heals 20 HP with Shield Block!")
-  
+
     def add_item(self, item: str):
         self.inventory.append(item)
 
@@ -94,6 +94,20 @@ class Character:
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
+
+    def get_stats(self):
+        # Depending on the hero, there might be different stats
+        if self.name == "Captain America":
+            return [self.strength, self.endurance]
+        elif self.name == "Thor":
+            return [self.strength, self.magic]
+        else:
+            return [self.strength, self.intelligence]
+
+    def is_alive(self):
+        # Check if any of the character's stats are still alive
+        stats = self.get_stats()
+        return any(stat.is_alive() for stat in stats)
 
     def get_stats(self):
         # Depending on the hero, there might be different stats
@@ -146,6 +160,7 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
+
 class FinalBoss(Event):
     def __init__(self):
         super().__init__({
@@ -155,7 +170,7 @@ class FinalBoss(Event):
             'pass': {'message': 'You defeat Thanos and save the universe!'},
             'fail': {'message': 'Thanos defeats you, and the universe falls into chaos!'},
             'partial_pass': {'message': 'You wound Thanos but he escapes for now.'}
-        }) 
+        })
 
 
 class Location:
@@ -172,6 +187,7 @@ class Game:
         self.party = characters
         self.locations = locations
         self.continue_playing = True
+        self.defeated_thanos = False  # Track if Thanos has been defeated
 
     def start(self):
         while self.continue_playing:
@@ -187,24 +203,24 @@ class Game:
             print("Your party has been defeated. Game Over!")
             self.continue_playing = False
             return True  # Game over
-    
-    # If Thanos hasn't been defeated, trigger the final battle
+
+        # If Thanos hasn't been defeated, trigger the final battle
         elif not self.defeated_thanos:
             print("Final Battle! Thanos has arrived!")
             thanos_battle = FinalBoss()
             thanos_battle.execute(self.party, self.parser)
-        
-        if thanos_battle.status == EventStatus.PASS:
-            self.defeated_thanos = True
-            print("Congratulations, you have defeated Thanos and won the game!")
-            return True  # Game over with victory
-        
-        elif thanos_battle.status == EventStatus.FAIL:
-            print("Thanos defeated your team. Game Over.")
-            self.continue_playing = False
-            return True  # Game over with defeat
 
-    # Continue playing if none of the above conditions triggered a game over
+            if thanos_battle.status == EventStatus.PASS:
+                self.defeated_thanos = True
+                print("Congratulations, you have defeated Thanos and won the game!")
+                return True  # Game over with victory
+
+            elif thanos_battle.status == EventStatus.FAIL:
+                print("Thanos defeated your team. Game Over.")
+                self.continue_playing = False
+                return True  # Game over with defeat
+
+        # Continue playing if none of the above conditions triggered a game over
         return False
 
 
@@ -229,22 +245,43 @@ class UserInputParser:
 
 
 def load_events_from_json(file_path: str) -> List[Event]:
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return [Event(event_data) for event_data in data]
+    with open(file_path) as f:
+        data = json.load(f)
+    return [Event(event) for event in data]
 
 
-def start_game():
+if __name__ == "__main__":
     parser = UserInputParser()
-    characters = [Character("Iron Man"), Character("Captain America"), Character("Thor")]
 
-    # Load events from the JSON file
-    events = load_events_from_json('project_code/location_events/location_1.json')
+    # Define Marvel characters
+    iron_man = Character("Iron Man")
+    captain_america = Character("Captain America")
+    thor = Character("Thor")
 
-    locations = [Location(events)]
-    game = Game(parser, characters, locations)
+    # Load events from JSON file or define some in code
+    event_data = [
+        {
+            "primary_attribute": "Strength",
+            "secondary_attribute": "Intelligence",
+            "prompt_text": "A powerful enemy is attacking the city!",
+            "pass": {"message": "You defeat the enemy!"},
+            "fail": {"message": "The enemy defeats you!"},
+            "partial_pass": {"message": "You drive the enemy away, but they cause some damage."}
+        },
+        {
+            "primary_attribute": "Endurance",
+            "secondary_attribute": "Strength",
+            "prompt_text": "A building is collapsing, can you hold it up?",
+            "pass": {"message": "You save the building and everyone inside!"},
+            "fail": {"message": "The building collapses."},
+            "partial_pass": {"message": "You save some people, but the building is lost."}
+        }
+    ]
+
+    events = [Event(e) for e in event_data]
+
+    # Define locations
+    city = Location(events)
+
+    game = Game(parser, [iron_man, captain_america, thor], [city])
     game.start()
-
-
-if __name__ == '__main__':
-    start_game()

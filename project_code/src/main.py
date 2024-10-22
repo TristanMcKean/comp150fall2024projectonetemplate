@@ -229,35 +229,35 @@ class UserInputParser:
         return input(prompt)
 
     def select_party_member(self, party: List[Character]) -> Character:
+        print("Choose a Marvel hero:")
+        for idx, member in enumerate(party):
+            print(f"{idx + 1}. {member.name}")
+    
         while True:
             try:
-                print("Choose a Marvel hero:")
-                for idx, member in enumerate(party):
-                    print(f"{idx + 1}. {member.name}")
                 choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
-                
                 if 0 <= choice < len(party):
                     return party[choice]
                 else:
-                    print("Invalid selection. Please choose a valid hero number.")
+                    print("Incorrect input, choose a correct input.")
             except ValueError:
-                print("Invalid input. Please enter a number corresponding to a hero.")
+                print("Incorrect input, choose a correct input.")
 
     def select_stat(self, character: Character) -> Statistic:
+        print(f"Choose a stat for {character.name}:")
+        stats = character.get_stats()
+        for idx, stat in enumerate(stats):
+            print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
+
         while True:
             try:
-                print(f"Choose a stat for {character.name}:")
-                stats = character.get_stats()
-                for idx, stat in enumerate(stats):
-                    print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
                 choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-
                 if 0 <= choice < len(stats):
                     return stats[choice]
                 else:
-                    print("Invalid selection. Please choose a valid stat number.")
+                    print("Incorrect input, choose a correct input.")
             except ValueError:
-                print("Invalid input. Please enter a number corresponding to a stat.")
+                print("Incorrect input, choose a correct input.")
 
 
 # Test function to validate that input is handled correctly

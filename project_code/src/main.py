@@ -229,25 +229,71 @@ class UserInputParser:
         return input(prompt)
 
     def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a Marvel hero:")
-        for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
-        return party[choice]
+        while True:
+            try:
+                print("Choose a Marvel hero:")
+                for idx, member in enumerate(party):
+                    print(f"{idx + 1}. {member.name}")
+                choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
+                
+                if 0 <= choice < len(party):
+                    return party[choice]
+                else:
+                    print("Invalid selection. Please choose a valid hero number.")
+            except ValueError:
+                print("Invalid input. Please enter a number corresponding to a hero.")
 
     def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
-        stats = character.get_stats()
-        for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
-        choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-        return stats[choice]
+        while True:
+            try:
+                print(f"Choose a stat for {character.name}:")
+                stats = character.get_stats()
+                for idx, stat in enumerate(stats):
+                    print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
+                choice = int(self.parse("Enter the number of the stat to use: ")) - 1
+
+                if 0 <= choice < len(stats):
+                    return stats[choice]
+                else:
+                    print("Invalid selection. Please choose a valid stat number.")
+            except ValueError:
+                print("Invalid input. Please enter a number corresponding to a stat.")
 
 
-def load_events_from_json(file_path: str) -> List[Event]:
-    with open(file_path) as f:
-        data = json.load(f)
-    return [Event(event) for event in data]
+# Test function to validate that input is handled correctly
+def test_input_validation():
+    parser = UserInputParser()
+
+    # Mock Characters for testing
+    iron_man = Character("Iron Man")
+    captain_america = Character("Captain America")
+    thor = Character("Thor")
+    party = [iron_man, captain_america, thor]
+
+    # Simulating valid and invalid inputs for character selection
+    print("Testing Character Selection with Invalid Inputs:")
+    test_inputs = ["abc", "0", "4", "2"]  # invalid inputs first, then a valid input
+    for input_value in test_inputs:
+        # Patch the input() function to return predefined test inputs
+        parser.parse = lambda _: input_value  # Override input() to return test values
+        try:
+            selected_hero = parser.select_party_member(party)
+            print(f"Selected Hero: {selected_hero.name}")
+            break  # Once a valid hero is selected, break out of loop
+        except Exception as e:
+            print(e)
+
+    # Simulating valid and invalid inputs for stat selection
+    print("\nTesting Stat Selection with Invalid Inputs:")
+    test_inputs = ["xyz", "0", "3", "1"]  # invalid inputs first, then a valid input
+    for input_value in test_inputs:
+        parser.parse = lambda _: input_value  # Override input() to return test values
+        try:
+            selected_stat = parser.select_stat(iron_man)
+            print(f"Selected Stat: {selected_stat.name}")
+            break  # Once a valid stat is selected, break out of loop
+        except Exception as e:
+            print(e)
 
 
 if __name__ == "__main__":

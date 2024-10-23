@@ -3,6 +3,7 @@ import sys
 import random
 from typing import List
 from enum import Enum
+import turtle as t
 
 
 class EventStatus(Enum):
@@ -30,7 +31,7 @@ class Statistic:
         print(f"Do you want to use {self.name}'s special move? (y/n)")
         use_special = input().strip().lower()
         if use_special == 'y':
-            self.special_move(target)  # Call special move if chosen
+            self.special_move(target)
         else:
             success_chance = random.randint(1, 100)
             if success_chance <= 70:
@@ -41,7 +42,6 @@ class Statistic:
                 print(f"{self.name}'s attack missed!")
 
     def special_move(self, target: "Statistic"):
-        # Different special moves based on hero class
         if self.hero_class == "Genius":
             print(f"{self.name} uses Repulsor Blast!")
             success_chance = random.randint(1, 100)
@@ -66,7 +66,7 @@ class Statistic:
         if item in self.inventory:
             print(f"{self.name} uses {item}.")
             if item == "Vibranium Shield":
-                self.health += 30  # Heals for 30 HP
+                self.health += 30
                 print(f"{self.name} heals for 30 HP with Vibranium Shield!")
             self.inventory.remove(item)
 
@@ -77,7 +77,6 @@ class Statistic:
 class Character:
     def __init__(self, name: str):
         self.name = name
-        # Adding Marvel heroes and their stats
         if name == "Iron Man":
             self.strength = Statistic("Strength", "Genius", health=100, attack_power=15)
             self.intelligence = Statistic("Intelligence", "Genius", health=100, attack_power=25)
@@ -88,7 +87,6 @@ class Character:
             self.strength = Statistic("Strength", "Asgardian", health=150, attack_power=30)
             self.magic = Statistic("Magic", "Asgardian", health=150, attack_power=25)
         else:
-            # Default character if the name doesn't match
             self.strength = Statistic("Strength", "Hero", health=100, attack_power=10)
             self.intelligence = Statistic("Intelligence", "Hero", health=100, attack_power=10)
 
@@ -96,7 +94,6 @@ class Character:
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
 
     def get_stats(self):
-        # Depending on the hero, there might be different stats
         if self.name == "Captain America":
             return [self.strength, self.endurance]
         elif self.name == "Thor":
@@ -105,18 +102,8 @@ class Character:
             return [self.strength, self.intelligence]
 
     def is_alive(self):
-        # Check if any of the character's stats are still alive
         stats = self.get_stats()
         return any(stat.is_alive() for stat in stats)
-
-    def get_stats(self):
-        # Depending on the hero, there might be different stats
-        if self.name == "Captain America":
-            return [self.strength, self.endurance]
-        elif self.name == "Thor":
-            return [self.strength, self.magic]
-        else:
-            return [self.strength, self.intelligence]
 
 
 class Enemy(Statistic):
@@ -142,7 +129,7 @@ class Event:
         self.fail_message = data['fail']['message']
         self.partial_pass_message = data['partial_pass']['message']
         self.status = EventStatus.UNKNOWN
-        self.enemy = enemy  # Store the enemy if there is one
+        self.enemy = enemy
 
     def execute(self, party: List[Character], parser):
         print(self.prompt_text)
@@ -155,24 +142,24 @@ class Event:
             self.resolve_choice(character, chosen_stat)
 
     def battle_with_enemy(self, party: List[Character], parser):
-        # Logic for battling the enemy
         while self.enemy.is_alive() and any(member.is_alive() for member in party):
             for member in party:
                 if member.is_alive():
                     character = member
-                    chosen_stat = parser.select_stat(character)
-                    character.attack(self.enemy)
+                    chosen_stat = parser.select_stat(character)  # Select stat to attack
+                    chosen_stat.attack(self.enemy)  # Attack using the chosen stat
 
                     if not self.enemy.is_alive():
                         print(f"{self.enemy.name} has been defeated!")
                         self.status = EventStatus.PASS
                         break
                 if self.enemy.is_alive():
-                    self.enemy.attack(character)
+                    self.enemy.attack(chosen_stat)  # Enemy attacks the chosen stat
 
         if not any(member.is_alive() for member in party):
             print("Your party has been defeated!")
             self.status = EventStatus.FAIL
+
 
     def resolve_choice(self, character: Character, chosen_stat: Statistic):
         if chosen_stat.name == self.primary_attribute:
@@ -212,7 +199,7 @@ class Game:
         self.party = characters
         self.locations = locations
         self.continue_playing = True
-        self.defeated_thanos = False  # Track if Thanos has been defeated
+        self.defeated_thanos = False
 
     def start(self):
         while self.continue_playing:
@@ -227,9 +214,7 @@ class Game:
         if all(not member.is_alive() for member in self.party):
             print("Your party has been defeated. Game Over!")
             self.continue_playing = False
-            return True  # Game over
-
-        # If Thanos hasn't been defeated, trigger the final battle
+            return True
         elif not self.defeated_thanos:
             print("Final Battle! Thanos has arrived!")
             thanos_battle = FinalBoss()
@@ -238,14 +223,11 @@ class Game:
             if thanos_battle.status == EventStatus.PASS:
                 self.defeated_thanos = True
                 print("Congratulations, you have defeated Thanos and won the game!")
-                return True  # Game over with victory
-
+                return True
             elif thanos_battle.status == EventStatus.FAIL:
                 print("Thanos defeated your team. Game Over.")
                 self.continue_playing = False
-                return True  # Game over with defeat
-
-        # Continue playing if none of the above conditions triggered a game over
+                return True
         return False
 
 
@@ -263,108 +245,53 @@ class UserInputParser:
                 choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
                 if 0 <= choice < len(party):
                     return party[choice]
-                else:
-                    print("Incorrect input, choose a correct input.")
             except ValueError:
-                print("Incorrect input, choose a correct input.")
+                pass
+            print("Invalid choice. Please try again.")
 
     def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
+        print(f"Select a stat for {character.name}:")
         stats = character.get_stats()
         for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} (HP: {stat.health}, AP: {stat.attack_power})")
-
+            print(f"{idx + 1}. {stat.name}")
+        
         while True:
             try:
-                choice = int(self.parse("Enter the number of the stat to use: ")) - 1
+                choice = int(self.parse("Enter the number of the chosen stat: ")) - 1
                 if 0 <= choice < len(stats):
                     return stats[choice]
-                else:
-                    print("Incorrect input, choose a correct input.")
             except ValueError:
-                print("Incorrect input, choose a correct input.")
+                pass
+            print("Invalid choice. Please try again.")
 
 
-# Test function to validate that input is handled correctly
-def test_input_validation():
+def main():
     parser = UserInputParser()
 
-    # Mock Characters for testing
-    iron_man = Character("Iron Man")
-    captain_america = Character("Captain America")
-    thor = Character("Thor")
-    party = [iron_man, captain_america, thor]
+    # Setup party (select heroes)
+    heroes = [
+        Character("Iron Man"),
+        Character("Captain America"),
+        Character("Thor")
+    ]
 
-    # Simulating valid and invalid inputs for character selection
-    print("Testing Character Selection with Invalid Inputs:")
-    test_inputs = ["abc", "0", "4", "2"]  # invalid inputs first, then a valid input
-    for input_value in test_inputs:
-        # Patch the input() function to return predefined test inputs
-        parser.parse = lambda _: input_value  # Override input() to return test values
-        try:
-            selected_hero = parser.select_party_member(party)
-            print(f"Selected Hero: {selected_hero.name}")
-            break  # Once a valid hero is selected, break out of loop
-        except Exception as e:
-            print(e)
+    # Setup enemies and events
+    enemy1 = Enemy("Loki", 100, 20)
+    event1 = Event({
+        'primary_attribute': 'Strength',
+        'secondary_attribute': 'Magic',
+        'prompt_text': 'Loki is causing chaos! What will you do?',
+        'pass': {'message': 'You defeated Loki!'},
+        'fail': {'message': 'Loki escapes!'},
+        'partial_pass': {'message': 'You fought Loki, but he managed to escape!'}
+    }, enemy=enemy1)
 
-    # Simulating valid and invalid inputs for stat selection
-    print("\nTesting Stat Selection with Invalid Inputs:")
-    test_inputs = ["xyz", "0", "3", "1"]  # invalid inputs first, then a valid input
-    for input_value in test_inputs:
-        parser.parse = lambda _: input_value  # Override input() to return test values
-        try:
-            selected_stat = parser.select_stat(iron_man)
-            print(f"Selected Stat: {selected_stat.name}")
-            break  # Once a valid stat is selected, break out of loop
-        except Exception as e:
-            print(e)
+    location1 = Location([event1])
+
+    # Setup game and start
+    game = Game(parser, heroes, [location1])
+    game.start()
 
 
 if __name__ == "__main__":
-    parser = UserInputParser()
-
-    # Define enemies
-    enemies = [
-        Enemy(name="Loki", health=80, attack_power=10),
-        Enemy(name="Ultron", health=100, attack_power=15),
-        Enemy(name="Thanos", health=200, attack_power=25)  # Final Boss
-    ]
-
-    # Define Marvel characters
-    iron_man = Character("Iron Man")
-    captain_america = Character("Captain America")
-    thor = Character("Thor")
-
-    # Load events from JSON file or define some in code
-    event_data = [
-        {
-            "primary_attribute": "Strength",
-            "secondary_attribute": "Intelligence",
-            "prompt_text": "A powerful enemy is attacking the city!",
-            "pass": {"message": "You defeat the enemy!"},
-            "fail": {"message": "The enemy defeats you!"},
-            "partial_pass": {"message": "You drive the enemy away, but they cause some damage."}
-        },
-        {
-            "primary_attribute": "Endurance",
-            "secondary_attribute": "Strength",
-            "prompt_text": "A building is collapsing, can you hold it up?",
-            "pass": {"message": "You save the building and everyone inside!"},
-            "fail": {"message": "The building collapses."},
-            "partial_pass": {"message": "You save some people, but the building is lost."}
-        }
-    ]
-
-    # Create event instances with corresponding enemies
-    events = [
-        Event(data, enemy) for data, enemy in zip(event_data, enemies)
-    ]
-
-    # Define locations
-    city = Location(events)
-
-    # Start the game
-    game = Game(parser, [iron_man, captain_america, thor], [city])
-    game.start()
-    
+    main()

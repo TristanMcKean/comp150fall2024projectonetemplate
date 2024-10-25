@@ -183,6 +183,25 @@ class FinalBoss(Event):
             'fail': {'message': 'Thanos defeats you, and the universe falls into chaos!'},
             'partial_pass': {'message': 'You wound Thanos but he escapes for now.'}
         })
+        # Thanos has high health and attack power for a more intense battle
+        self.enemy = Enemy("Thanos", health=150, attack_power=35)
+
+    def execute(self, party: List[Character], parser):
+        print(self.prompt_text)
+        print("The final battle begins!")
+        
+        # Loop to allow multiple battle rounds
+        while self.enemy.is_alive() and any(member.is_alive() for member in party):
+            self.battle_with_enemy(party, parser)
+
+        if self.enemy.is_alive():
+            print("Thanos proved too powerful!")
+            self.status = EventStatus.FAIL
+            print(self.fail_message)
+        else:
+            print("Thanos has been defeated!")
+            self.status = EventStatus.PASS
+            print(self.pass_message)
 
 
 class Location:
@@ -278,7 +297,7 @@ def main():
     ]
 
     # Setup enemies and events
-    enemy1 = Enemy("Loki", 100, 20)
+    enemy1 = Enemy("Loki", 50, 20)
     event1 = Event({
         'primary_attribute': 'Strength',
         'secondary_attribute': 'Magic',
@@ -297,3 +316,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

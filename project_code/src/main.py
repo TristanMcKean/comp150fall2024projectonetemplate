@@ -13,6 +13,7 @@ class EventStatus(Enum):
     PARTIAL_PASS = "partial_pass"
 
 
+
 class Statistic:
     def __init__(self, name: str, hero_class: str, health: int = 0, attack_power: int = 0):
         self.name = name

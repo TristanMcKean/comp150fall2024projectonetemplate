@@ -29,18 +29,26 @@ class Statistic:
         return self.health > 0
 
     def attack(self, target: "Statistic"):
-        print(f"Do you want to use {self.name}'s special move? (y/n)")
-        use_special = input().strip().lower()
-        if use_special == 'y':
-            self.special_move(target)
-        else:
-            success_chance = random.randint(1, 100)
-            if success_chance <= 70:
-                damage = random.randint(1, self.attack_power)
-                target.health -= damage
-                print(f"{self.name} attacks {target.name} for {damage} damage!")
+        while True:
+            print(f"Do you want to use {self.name}'s special move? (y/n)")
+            use_special = input().strip().lower()
+            
+            # Check if input is valid
+            if use_special in {'y', 'yes'}:
+                self.special_move(target)
+                break
+            elif use_special in {'n', 'no'}:
+                success_chance = random.randint(1, 100)
+                if success_chance <= 70:
+                    damage = random.randint(1, self.attack_power)
+                    target.health -= damage
+                    print(f"{self.name} attacks {target.name} for {damage} damage!")
+                else:
+                    print(f"{self.name}'s attack missed!")
+                break
             else:
-                print(f"{self.name}'s attack missed!")
+                print("Invalid choice. Please try again.")
+
 
     def special_move(self, target: "Statistic"):
         if self.hero_class == "Genius":

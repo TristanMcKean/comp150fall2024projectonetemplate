@@ -308,10 +308,21 @@ def main():
         'partial_pass': {'message': 'You fought Loki, but he managed to escape!'}
     }, enemy=enemy1)
 
+    enemy2 = Enemy ("Ultron", 75, 25)
+    event2 = Event({
+    'primary_attribute': 'Intelligence',
+    'secondary_attribute': 'Strength',
+    'prompt_text': 'Ultron is attacking the city! What will you do?',
+    'pass': {'message': 'You defeated Ultron!'},
+    'fail': {'message': 'Ultron escapes!'},
+    'partial_pass': {'message': 'You fought Ultron, but he managed to escape!'}
+}, enemy=enemy2)
+
     location1 = Location([event1])
+    location2 = Location([event2])
 
     # Setup game and start
-    game = Game(parser, heroes, [location1])
+    game = Game(parser, heroes, [location1, location2])
     game.start()
 
 

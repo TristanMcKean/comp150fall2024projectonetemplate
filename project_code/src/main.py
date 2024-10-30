@@ -239,7 +239,7 @@ class FinalBoss(Event):
             'partial_pass': {'message': 'You wound Thanos but he escapes for now.'}
         })
         # Thanos has high health and attack power for a more intense battle
-        self.enemy = Character("Thanos", health=125, attack_power=35)
+        self.enemy = Character("Thanos", health=75, attack_power=35)
 
     def execute(self, party: List[Character], parser):
         print(self.prompt_text)
@@ -327,7 +327,7 @@ def main():
         'partial_pass': {'message': 'You fought Loki, but he managed to escape!'}
     }, enemy=enemy1)
 
-    enemy2 = Character ("Ultron", 75, 25)
+    enemy2 = Character ("Ultron", 50, 25)
     event2 = Event({
     'primary_attribute': 'Intelligence',
     'secondary_attribute': 'Strength',

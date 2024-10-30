@@ -57,15 +57,12 @@ class Character:
             return [self.strength, self.intelligence]
 
     def is_alive(self):
-        return self.health <= 0 # it should never be less than, but just in case
+        return self.health > 0 # it should never be less than, but just in case
 
     def modify_health(self, amount):
         new_health = self.health + amount
         # remove
-        if new_health < 0:
-            self.health = 0
-        def add_item(self, item: str):
-            self.inventory.append(item)
+        self.health = max(new_health, 0)
 
     def use_item(self, item: str):
         if item in self.inventory:
@@ -74,6 +71,16 @@ class Character:
                 self.health += 30
                 print(f"{self.name} heals for 30 HP with Vibranium Shield!")
             self.inventory.remove(item)
+
+    def enemy_attack(self, target: "Character"):
+        """Method to handle a basic attack from an enemy without needing extra arguments."""
+        success_chance = random.randint(1, 100)
+        if success_chance <= self.minimum_proc_chance:
+            damage = random.randint(self.attack_power, self.attack_power * 2)  # Example: enemy can inflict higher damage
+            target.modify_health(-damage)
+            print(f"{self.name} attacks {target.name} for {damage} damage!")
+        else:
+            print(f"{self.name}'s attack missed!")
 
     def attack(self, statistic, kind_of_attack, target):
         if kind_of_attack == "Special":
@@ -84,8 +91,11 @@ class Character:
     def basic_attack(self, statistic: Statistic, target: "Character"):
         success_chance = random.randint(1, 100)
         if success_chance <= self.minimum_proc_chance:
-            damage = random.randint(statistic.value, self.attack_power)
-            target.modify_health(-1*damage)
+            # Ensure minimum and maximum values are correctly ordered
+            min_damage = min(statistic.value, self.attack_power)
+            max_damage = max(statistic.value, self.attack_power)
+            damage = random.randint(min_damage, max_damage)
+            target.modify_health(-damage)
             print(f"{self.name} attacks {target.name} for {damage} damage!")
         else:
             print(f"{self.name}'s attack missed!")
@@ -195,14 +205,12 @@ class Event:
                     attack_kind = parser.what_kind_of_attack(character)
                     character.attack(chosen_stat, attack_kind, self.enemy)
 
-                    # chosen_stat.attack(self.enemy)  # Attack using the chosen stat
-
                     if not self.enemy.is_alive():
                         print(f"{self.enemy.name} has been defeated!")
                         self.status = EventStatus.PASS
                         break
                 if self.enemy.is_alive():
-                    self.enemy.attack(member)  # Enemy attacks the chosen stat
+                    self.enemy.enemy_attack(member)  # Enemy attacks using the new `enemy_attack` method
 
         if not any(member.is_alive() for member in party):
             print("Your party has been defeated!")
@@ -231,7 +239,7 @@ class FinalBoss(Event):
             'partial_pass': {'message': 'You wound Thanos but he escapes for now.'}
         })
         # Thanos has high health and attack power for a more intense battle
-        self.enemy = Character("Thanos", health=150, attack_power=35)
+        self.enemy = Character("Thanos", health=125, attack_power=35)
 
     def execute(self, party: List[Character], parser):
         print(self.prompt_text)

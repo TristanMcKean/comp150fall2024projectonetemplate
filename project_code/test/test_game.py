@@ -1,8 +1,19 @@
-import sys
 import os
+import sys
+import unittest
+from unittest.mock import patch
+
 
 # Add the root directory of the project to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
+from src import Character, Event, Game, FinalBoss, UserInputParser, Location, EventStatus
+
+class TestCharacter(unittest.TestCase):
+
+# Add the root directory of the project to the Python path
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
 
 from project_code.src.main import Statistic, Character, Event
 import unittest
@@ -31,12 +42,37 @@ class TestStatistic(unittest.TestCase):
 class TestCharacter(unittest.TestCase):
 
     def setUp(self):
-        self.character = Character(name="Hero")
+        self.character = Character(name="Iron Man", health = 100, attack_power=10)
+        self.enemy = Character("Loki", health=50, attack_power=5)
 
     def test_character_initialization(self):
         self.assertEqual(self.character.name, "Hero")
         self.assertEqual(self.character.strength.name, "Strength")
         self.assertEqual(self.character.intelligence.name, "Intelligence")
+
+    def test_modify_health_positive(self):
+        self.hero.modify_health(10)
+        self.assertEqual(self.hero.health, 110)
+
+    def test_modify_health_negative(self):
+        self.hero.modify_health(-30)
+        self.assertEqual(self.hero.health, 70)
+
+    def test_is_alive(self):
+        self.hero.health = 0
+        self.assertFalse(self.hero.is_alive())
+        self.hero.health = 1
+        self.assertTrue(self.hero.is_alive())
+
+    @patch('random.randint', return_value=90)
+    def test_basic_attack_successful(self, mock_randint):
+        self.hero.basic_attack(self.hero.strength, self.enemy)
+        self.assertLess(self.enemy.health, 50)
+
+    @patch('random.randint', return_value=5)
+    def test_basic_attack_missed(self, mock_randint):
+        self.hero.basic_attack(self.hero.strength, self.enemy)
+        self.assertEqual(self.enemy.health, 50)
 
 class TestEvent(unittest.TestCase):
 
@@ -58,6 +94,14 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
         self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
         self.assertEqual(self.event.partial_pass_message, self.event_data["partial_pass"]["message"])
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

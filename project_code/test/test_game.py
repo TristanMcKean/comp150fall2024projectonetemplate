@@ -100,6 +100,5 @@ class TestCharacterBasicAttackMissed(unittest.TestCase):
         self.character.basic_attack(self.strength, self.enemy)
         self.assertEqual(self.enemy.health, initial_health)
 
-
 if __name__ == '__main__':
     unittest.main()

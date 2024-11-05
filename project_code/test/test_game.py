@@ -76,7 +76,6 @@ class TestEvent(unittest.TestCase):
         }
         self.event = Event(self.event_data)
         
-
     def test_event_initialization(self):
         self.assertEqual(self.event.primary_attribute, "Intelligence")
         self.assertEqual(self.event.secondary_attribute, "Strength")

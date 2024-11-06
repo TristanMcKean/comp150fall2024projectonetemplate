@@ -7,7 +7,6 @@ from enum import Enum
 import turtle as t
 
 
-
 class EventStatus(Enum):
     UNKNOWN = "unknown"
     PASS = "pass"
@@ -18,7 +17,6 @@ class Statistic:
     def __init__(self, name: str,  value: int = 0):
         self.name = name
         self.value = value
-
 
 class Character:
     def __init__(self, name: str, health: int =100, attack_power = 1):
@@ -343,7 +341,7 @@ def main():
     # Setup game and start
     game = Game(parser, heroes, [location1, location2])
     game.start()
-
+# spacer
 if __name__ == "__main__":
     main()
 

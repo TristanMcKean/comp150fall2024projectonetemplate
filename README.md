@@ -42,7 +42,7 @@ Choose a party member:
 2. Character_1
 3. Character_2
 
-Enter the number of the chosen party member: 
+Enter the number of the chosen party member: Allan
 ```
 
 Simply follow the prompts to make your choices and see the outcomes.

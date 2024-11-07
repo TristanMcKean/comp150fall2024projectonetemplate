@@ -274,13 +274,34 @@ class Game:
         self.defeated_thanos = False
 
     def start(self):
+        #add the storyline
+        print("\n" + "=" * 50)
+        print("🌌 Welcome to Marvel Heroes Adventure 🌌")
+        print("=" * 50)
+        print(
+            "\nThe world is in peril. Dark forces are gathering, and powerful enemies are attacking cities across the globe.")
+        print("Iron Man, Captain America, Thor, and other heroes have come together to protect humanity.")
+        print("But the heroes know that these battles are just a prelude to a larger threat...")
+        print(
+            "Thanos, the Mad Titan, is on the horizon, seeking the Infinity Stones to reshape the universe to his twisted vision.")
+        print("\nYour mission:")
+        print("- Assemble your team of heroes")
+        print("- Defeat the villains threatening each location")
+        print("- Gather your strength for the final battle with Thanos")
+        print("\nThe fate of the universe rests in your hands!")
+        print("=" * 50 + "\n")
+
         while self.continue_playing:
             location = random.choice(self.locations)
             event = location.get_event()
             event.execute(self.party, self.parser)
             if self.check_game_over():
                 self.continue_playing = False
-        print("Game Over.")
+
+        if self.defeated_thanos:
+            print("\n🌟 Congratulations! You have saved the universe from Thanos' tyranny! 🌟")
+        else:
+            print("Game Over. Thanos proved too powerful, and darkness has fallen upon the universe.")
 
     def check_game_over(self):
         if all(not member.is_alive() for member in self.party):
@@ -301,8 +322,6 @@ class Game:
                 self.continue_playing = False
                 return True
         return False
-
-
 
 
 

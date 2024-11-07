@@ -5,7 +5,30 @@ from statistics import StatisticsError
 from typing import List
 from enum import Enum
 import turtle as t
+from flask import Flask, redirect, request, url_for, session
+import auth
 
+app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
+@app.route("/login")
+def login():
+    google_auth_url = auth.get_google_auth_url()
+    return redirect(google_auth_url)
+@app.route("/callback")
+def callback():
+    code = request.args.get("code")
+    user_info = auth.get_google_user_info(code)
+    session['user'] = user_info
+    return redirect(url_for("game"))
+@app.route("/game")
+def game():
+    if 'user' not in session:
+        return redirect(url_for("login"))
+    return "Game Start!"
+
+if __name__ == "__'main'__":
+    app.run(port=5000)
 
 
 class EventStatus(Enum):
@@ -121,12 +144,8 @@ class Character:
             print(f"{self.name} heals 20 HP with Shield Block!")
 
 
-
     def show_inventory(self):
         return self.inventory
-
-
-
 
 
 class UserInputParser:
@@ -171,8 +190,6 @@ class UserInputParser:
                 return "Special"
             elif use_special in {'n', 'no'}:
                 return "normal"
-
-
 
 
 class Event:
@@ -322,8 +339,6 @@ class Game:
                 self.continue_playing = False
                 return True
         return False
-
-
 
 def main():
     parser = UserInputParser()

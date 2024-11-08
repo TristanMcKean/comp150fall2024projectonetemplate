@@ -73,14 +73,16 @@ class Character:
             self.inventory.remove(item)
 
     def enemy_attack(self, target: "Character"):
-        """Method to handle a basic attack from an enemy without needing extra arguments."""
+        """Method to handle a basic attack from an enemy with added storytelling."""
         success_chance = random.randint(1, 100)
         if success_chance <= self.minimum_proc_chance:
-            damage = random.randint(self.attack_power, self.attack_power * 2)  # Example: enemy can inflict higher damage
+            damage = random.randint(self.attack_power, self.attack_power * 2)
+            print(f"\n🔥 {self.name} roars with fury and launches a powerful attack on {target.name}!")
+            print(f"{self.name} strikes... ", end="")
             target.modify_health(-damage)
-            print(f"{self.name} attacks {target.name} for {damage} damage!")
+            print(f"and deals {damage} damage to {target.name}! 🩸")
         else:
-            print(f"{self.name}'s attack missed!")
+            print(f"\n{self.name} swings wildly, but {target.name} skillfully dodges the attack! 🛡️")
 
     def attack(self, statistic, kind_of_attack, target):
         if kind_of_attack == "Special":
@@ -95,30 +97,35 @@ class Character:
             min_damage = min(statistic.value, self.attack_power)
             max_damage = max(statistic.value, self.attack_power)
             damage = random.randint(min_damage, max_damage)
+            
+            print(f"\n⚔️ {self.name} leaps into action, using their {statistic.name.lower()} to strike!")
+            print(f"{self.name} swings with a mighty blow... ", end="")
             target.modify_health(-damage)
-            print(f"{self.name} attacks {target.name} for {damage} damage!")
+            print(f"and deals {damage} damage to {target.name}! 💥")
         else:
-            print(f"{self.name}'s attack missed!")
+            print(f"\n{self.name} attacks with all their might... but the attack misses its mark! ❌")
 
 
 
     def special_move(self, target: "Character"):
         if self.hero_class == "Genius":
-            print(f"{self.name} uses Repulsor Blast!")
+            print(f"\n🚀 {self.name} activates his suit's Repulsor Blast! Energy beams shoot towards {target.name}!")
             success_chance = random.randint(1, 100)
             if success_chance <= 50:
                 damage = random.randint(25, 50)
-                target.health -= damage
-                print(f"{self.name} hits {target.name} for {damage} damage with Repulsor Blast!")
+                target.modify_health(-damage)
+                print(f"{self.name}'s Repulsor Blast lands, dealing {damage} damage to {target.name}! ⚡️")
+            else:
+                print(f"{self.name}'s Repulsor Blast misses! {target.name} dodges just in time!")
         elif self.hero_class == "Asgardian":
-            print(f"{self.name} uses Mjolnir Strike!")
+            print(f"\n⚡️ {self.name} raises Mjolnir to the skies, summoning a storm. The hammer crashes down on {target.name}!")
             damage = random.randint(15, 40)
-            target.health -= damage
-            print(f"{self.name} hits {target.name} for {damage} damage with Mjolnir!")
+            target.modify_health(-damage)
+            print(f"{self.name}'s Mjolnir strike lands with a thunderous boom, dealing {damage} damage! 🌩️")
         elif self.hero_class == "Super Soldier":
-            print(f"{self.name} uses Shield Block!")
+            print(f"\n🛡️ {self.name} raises his Vibranium Shield, blocking incoming attacks and fortifying himself.")
             self.health += 20
-            print(f"{self.name} heals 20 HP with Shield Block!")
+            print(f"{self.name} gains 20 HP, preparing for the next strike. 💪")
 
 
 

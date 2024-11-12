@@ -1,11 +1,12 @@
 import json
+import os
 import sys
 import random
 from statistics import StatisticsError
 from typing import List
 from enum import Enum
 import turtle as t
-from flask import Flask, redirect, request, url_for, session
+'''from flask import Flask, redirect, request, url_for, session
 import auth
 
 app = Flask(__name__)
@@ -28,11 +29,7 @@ def game():
     return "Game Start!"
 
 if __name__ == "__'main'__":
-    app.run(port=5000) 
-
-
-
-
+    app.run(port=5000)'''
 
 class EventStatus(Enum):
     UNKNOWN = "unknown"

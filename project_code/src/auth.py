@@ -18,7 +18,7 @@ def get_google_auth_url():
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri="http://localhost:5000?callback",
+        redirect_uri="https://marvel-heroes-adventure.onrender.com",
         scope=["openid", "email", "profile"],
     )
     return request_uri
@@ -30,7 +30,7 @@ def get_google_user_info(auth_code):
     token_url, headers, body = client.prepare_token_request(
         token_endpoint
         authorization_response=auth_code,
-        redirect_uri="http://localhost:5000/callback",
+        redirect_uri="https://marvel-heroes-adventure.onrender.com",
         client_id=GOOGLE_CLIENT_ID,
         client_secret=GOOGLE_CLIENT_SECRET,
     )

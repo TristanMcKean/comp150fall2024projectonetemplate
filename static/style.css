@@ -1,20 +1,73 @@
+/* General body styling */
 body {
-    text-align: center;
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #1e1e2e; /* Dark background for a battle feel */
+    color: #ffffff; /* White text for contrast */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
 }
 
+/* Heading styles */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #e63946; /* Bold red color for a dramatic heading */
+    text-shadow: 2px 2px #000; /* Adding shadow for emphasis */
+}
+
+/* Paragraph styles */
+p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+/* Button styles for future actions (if you want to add buttons) */
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
+    background-color: #457b9d;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #1d3557; /* Darker shade on hover */
+}
+
+/* Container to center content */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #2a2a3d; /* Darker background for emphasis */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    p {
+        font-size: 1.2rem;
+    }
+    button {
+        font-size: 0.9rem;
+    }
 }

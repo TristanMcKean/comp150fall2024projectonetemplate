@@ -1,9 +1,11 @@
 import json
+import os
 import sys
 import random
 from statistics import StatisticsError
 from typing import List
 from enum import Enum
+<<<<<<< HEAD
 
 
 from flask import Flask, request, jsonify
@@ -51,6 +53,9 @@ def attack():
 if __name__ == '__main__':
     app.run(debug=True)
 
+=======
+import turtle as t
+>>>>>>> c0303c5b5660efc498c68c5054554ea8eb73ba1c
 '''from flask import Flask, redirect, request, url_for, session
 import auth
 
@@ -74,11 +79,15 @@ def game():
     return "Game Start!"
 
 if __name__ == "__'main'__":
+<<<<<<< HEAD
     app.run(port=5000) '''
 
 
 
 
+=======
+    app.run(port=5000)'''
+>>>>>>> c0303c5b5660efc498c68c5054554ea8eb73ba1c
 
 class EventStatus(Enum):
     UNKNOWN = "unknown"

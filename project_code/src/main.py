@@ -85,11 +85,6 @@ def game():
         return redirect(url_for("login"))
     return "Game Start!"
 
-
-if __name__ == "__main__":
-    app.run(port=5000)
-
-
 # Classes definitions start here
 class EventStatus(Enum):
     UNKNOWN = "unknown"

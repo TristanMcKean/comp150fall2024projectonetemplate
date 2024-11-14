@@ -41,17 +41,6 @@ class Character:
         else:
             return [self.strength, self.intelligence]
 
-class Game:
-    def __init__(self, parser: UserInputParser, characters: List[Character], locations: List[Location]):
-        self.parser = parser
-        self.party = characters
-        self.locations = locations
-        self.continue_playing = True
-        self.defeated_thanos = False
-
-    def get_party(self):
-        return [{"name": char.name, "health": char.health, "hero_class": char.hero_class} for char in self.party]
-
 class Event:
     def __init__(self, data: dict, enemy: Character = None):
         self.primary_attribute = data.get('primary_attribute')
@@ -64,9 +53,76 @@ class Event:
         self.enemy = enemy
 
     def execute(self, party: List[Character], parser):
-        # Logic for executing the event
         print(self.prompt_text)
-        # Additional event handling logic can go here
+        if self.enemy:
+            print(f"An enemy {self.enemy.name} appears!")
+            self.battle_with_enemy(party, parser)
+        else:
+            character = parser.select_party_member(party)
+            chosen_stat = parser.select_stat(character)
+            self.resolve_choice(character, chosen_stat)
+
+    def battle_with_enemy(self, party: List[Character], parser):
+        while self.enemy.is_alive() and any(member.is_alive() for member in party):
+            for member in party:
+                if member.is_alive():
+                    character = member
+                    chosen_stat = parser.select_stat(character)
+                    attack_kind = parser.what_kind_of_attack(character)
+                    character.attack(chosen_stat, attack_kind, self.enemy)
+
+                    if not self.enemy.is_alive():
+                        print(f"\n⚔️ {self.enemy.name} has been defeated!")
+                        self.status = EventStatus.PASS
+                        break
+
+                if self.enemy.is_alive():
+                    self.enemy.enemy_attack(member)
+
+        if not any(member.is_alive() for member in party):
+            print("\n💀 Your party has been defeated! The world falls into darkness.")
+            self.status = EventStatus.FAIL
+
+    def resolve_choice(self, character: Character, chosen_stat: Statistic):
+        if chosen_stat.name == self.primary_attribute:
+            self.status = EventStatus.PASS
+            print(self.pass_message)
+        elif chosen_stat.name == self.secondary_attribute:
+            self.status = EventStatus.PARTIAL_PASS
+            print(self.partial_pass_message)
+        else:
+            self.status = EventStatus.FAIL
+            print(self.fail_message)
+
+class FinalBoss(Event):
+    def __init__(self):
+        super().__init__({
+            'primary_attribute': 'Strength',
+            'secondary_attribute': 'Endurance',
+            'prompt_text': '🌌 Thanos has arrived! Can you stop him before he claims all the Infinity Stones?',
+            'pass': {'message': 'You defeated Thanos and saved the universe!'},
+            'fail': {'message': 'Thanos defeats you, and the universe falls into chaos!'},
+            'partial_pass': {'message': 'You wound Thanos, but he escapes, vowing to return.'}
+        })
+        self.enemy = Character("Thanos", health=100, attack_power=40)
+
+    def execute(self, party: List[Character], parser):
+        print(self.prompt_text)
+        print("\n⚠️ The ground trembles as Thanos approaches. 'I am inevitable,' he declares.")
+        print("The final battle begins!")
+
+        while self.enemy.is_alive() and any(member.is_alive() for member in party):
+            self.battle_with_enemy(party, parser)
+
+        if self.enemy.is_alive():
+            print("\n💀 Thanos raises the Infinity Gauntlet, and with a snap, your heroes fall one by one.")
+            self.status = EventStatus.FAIL
+            print(self.fail_message)
+        else:
+            print("\n🔥 Thanos collapses, his gauntlet slipping from his grasp.")
+            print("As he fades into dust, the universe is safe once more... for now.")
+            self.status = EventStatus.PASS
+            print(self.pass_message)
 
 class UserInputParser:
     def parse(self, prompt: str) -> str:
@@ -92,3 +148,60 @@ class Location:
 
     def get_event(self) -> Event:
         return random.choice(self.events)
+
+class Game:
+    def __init__(self, parser: UserInputParser, characters: List[Character], locations: List[Location]):
+        self.parser = parser
+        self.party = characters
+        self.locations = locations
+        self.continue_playing = True
+        self.defeated_thanos = False
+
+    def start(self):
+        print("\n" + "=" * 50)
+        print("🌌 Welcome to Marvel Heroes Adventure 🌌")
+        print("=" * 50)
+        print(
+            "\nThe world is in peril. Dark forces are gathering, and powerful enemies are attacking cities across the globe.")
+        print("Iron Man, Captain America, Thor, and other heroes have come together to protect humanity.")
+        print("But the heroes know that these battles are just a prelude to a larger threat...")
+        print(
+            "Thanos, the Mad Titan, is on the horizon, seeking the Infinity Stones to reshape the universe to his twisted vision.")
+        print("\nYour mission:")
+        print("- Assemble your team of heroes")
+        print("- Defeat the villains threatening each location")
+        print("- Gather your strength for the final battle with Thanos")
+        print("\nThe fate of the universe rests in your hands!")
+        print("=" * 50 + "\n")
+
+        while self.continue_playing:
+            location = random.choice(self.locations)
+            event = location.get_event()
+            event.execute(self.party, self.parser)
+            if self.check_game_over():
+                self.continue_playing = False
+
+        if self.defeated_thanos:
+            print("\n🌟 Congratulations! You have saved the universe from Thanos' tyranny! 🌟")
+        else:
+            print("Game Over. Thanos proved too powerful, and darkness has fallen upon the universe.")
+
+    def check_game_over(self):
+        if all(not member.is_alive() for member in self.party):
+            print("\n🛑 Your heroes have fallen. The world is lost...")
+            self.continue_playing = False
+            return True
+        elif not self.defeated_thanos:
+            print("\n🚨 Final Battle! Thanos has arrived, wielding the Infinity Gauntlet!")
+            thanos_battle = FinalBoss()
+            thanos_battle.execute(self.party, self.parser)
+
+            if thanos_battle.status == EventStatus.PASS:
+                self.defeated_thanos = True
+                print("\n🎉 The Avengers stand victorious! The universe is safe from Thanos' tyranny.")
+                return True
+            elif thanos_battle.status == EventStatus.FAIL:
+                print("\n💀 Thanos stands triumphant. Half of all life fades into dust...")
+                self.continue_playing = False
+                return True
+        return False

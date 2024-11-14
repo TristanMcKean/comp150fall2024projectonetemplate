@@ -1,1 +1,7 @@
 flask
+SQLAlchemy
+psycopg2
+requests
+requests_oauthlib
+oauthlib
+gunicorn

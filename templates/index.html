@@ -11,6 +11,53 @@
     <div id="characters"></div>
     <button id="startBattleButton">Start Battle</button>
     <div id="battle-log"></div>
+
+    <!-- Load/save progress functionality -->
+    <script>
+        async function loadProgress() {
+            try {
+                const response = await fetch('/load_progress');
+                const data = await response.json();
+
+                if (data.game_progress) {
+                    const progress = JSON.parse(data.game_progress);
+                    console.log("Loaded progress:", progress);
+                    // Load progress into the game state
+                } else {
+                    console.log("No saved progress found.");
+                }
+            } catch (error) {
+                console.error("Error loading progress:", error);
+            }
+        }
+
+        async function saveProgress(progress) {
+            try {
+                const response = await fetch('/save_progress', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ game_progress: JSON.stringify(progress) }),
+                });
+
+                const result = await response.json();
+                console.log(result.message);
+            } catch (error) {
+                console.error("Error saving progress:", error);
+            }
+        }
+
+        // Simulate a game change
+        function onGameChange(newProgress) {
+            saveProgress(newProgress);
+        }
+
+        // Load progress on page load
+        window.addEventListener('load', loadProgress);
+    </script>
+
+    <!-- Main game script -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

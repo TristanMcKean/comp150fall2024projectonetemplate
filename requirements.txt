@@ -1,6 +1,6 @@
 flask
 SQLAlchemy
-psycopg2
+psycopg2-binary
 requests
 requests_oauthlib
 oauthlib

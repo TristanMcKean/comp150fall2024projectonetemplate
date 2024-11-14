@@ -42,8 +42,53 @@ class Character:
             return [self.strength, self.intelligence]
 
 class Game:
-    def __init__(self, characters: List[Character]):
+    def __init__(self, parser: UserInputParser, characters: List[Character], locations: List[Location]):
+        self.parser = parser
         self.party = characters
+        self.locations = locations
+        self.continue_playing = True
+        self.defeated_thanos = False
 
     def get_party(self):
         return [{"name": char.name, "health": char.health, "hero_class": char.hero_class} for char in self.party]
+
+class Event:
+    def __init__(self, data: dict, enemy: Character = None):
+        self.primary_attribute = data.get('primary_attribute')
+        self.secondary_attribute = data.get('secondary_attribute')
+        self.prompt_text = data.get('prompt_text')
+        self.pass_message = data.get('pass', {}).get('message')
+        self.fail_message = data.get('fail', {}).get('message')
+        self.partial_pass_message = data.get('partial_pass', {}).get('message')
+        self.status = EventStatus.UNKNOWN
+        self.enemy = enemy
+
+    def execute(self, party: List[Character], parser):
+        # Logic for executing the event
+        print(self.prompt_text)
+        # Additional event handling logic can go here
+
+class UserInputParser:
+    def parse(self, prompt: str) -> str:
+        return input(prompt)
+
+    def select_party_member(self, party: List[Character]) -> Character:
+        print("Choose a Marvel hero:")
+        for idx, member in enumerate(party):
+            print(f"{idx + 1}. {member.name}")
+
+        while True:
+            try:
+                choice = int(self.parse("Enter the number of the chosen hero: ")) - 1
+                if 0 <= choice < len(party):
+                    return party[choice]
+            except ValueError:
+                pass
+            print("Invalid choice. Please try again.")
+
+class Location:
+    def __init__(self, events: List[Event]):
+        self.events = events
+
+    def get_event(self) -> Event:
+        return random.choice(self.events)

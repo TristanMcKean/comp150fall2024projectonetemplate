@@ -3,14 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle Arena</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Marvel Heroes Battle</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364); /* Matching background gradient */
+            color: #f0f0f0;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 2rem; /* Smaller font size for the title */
+            text-shadow: 2px 2px 5px #000;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5rem; /* Reduced size for subheadings */
+            text-shadow: 1px 1px 3px #000;
+            margin-bottom: 15px;
+        }
+        h3 {
+            font-size: 1.2rem; /* Smaller for battle status title */
+            margin-top: 20px;
+        }
+        #heroes-list, #enemies-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #heroes-list li, #enemies-list li {
+            font-size: 1rem; /* Smaller font size for list items */
+            padding: 8px;
+            margin: 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px #000;
+        }
+        button {
+            padding: 10px 20px; /* Smaller padding */
+            font-size: 1.2rem; /* Smaller font size for buttons */
+            color: #fff;
+            background-color: #e94560;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 2px 2px 6px #000;
+        }
+        button:hover {
+            background-color: #ff306a;
+            transform: translateY(-2px);
+        }
+        #actions {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        #battle-status {
+            font-size: 1rem; /* Smaller font size for battle status */
+            margin-top: 15px;
+            padding: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px #000;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Battle Arena</h1>
-        <p>The battle has begun! Prepare for an epic showdown!</p>
-        <button onclick="window.location.href='/'">Return Home</button>
+    <h1>Marvel Heroes Adventure</h1>
+    
+    <div id="hero-stats">
+        <h2>Your Heroes</h2>
+        <ul id="heroes-list">
+            <!-- Heroes will be dynamically populated -->
+        </ul>
     </div>
+
+    <div id="enemy-stats">
+        <h2>Enemies</h2>
+        <ul id="enemies-list">
+            <!-- Enemies will be dynamically populated -->
+        </ul>
+    </div>
+
+    <div id="actions">
+        <button onclick="performAction('attack')">Attack</button>
+        <button onclick="performAction('special')">Use Special Move</button>
+    </div>
+
+    <h3>Battle Status</h3>
+    <p id="battle-status"></p>
+
+    <script src="static/script.js"></script>
 </body>
 </html>

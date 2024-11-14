@@ -56,7 +56,7 @@ if __name__ == '__main__':
 =======
 import turtle as t
 >>>>>>> c0303c5b5660efc498c68c5054554ea8eb73ba1c
-'''from flask import Flask, redirect, request, url_for, session
+from flask import Flask, redirect, request, url_for, session
 import auth
 
 app = Flask(__name__)

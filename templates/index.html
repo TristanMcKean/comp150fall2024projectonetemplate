@@ -3,14 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Heroes Adventure</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Game Start</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #0a2a3d, #1e3c5f); /* Gradient blue tones */
+            color: #f0f0f0;
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 5px #000;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            color: #fff;
+            background-color: #ff6f61; /* Bright, dynamic color */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background-color: #ff3b30; /* Darker shade on hover */
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
 <body>
-    <h1>Marvel Heroes Adventure</h1>
-    <div id="characters"></div>
-    <button id="startBattleButton">Start Battle</button>
-    <div id="battle-log"></div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <h1>Welcome to the Superhero Battle!</h1>
+    <button onclick="window.location.href='/battle'">Enter the Arena</button>
 </body>
 </html>

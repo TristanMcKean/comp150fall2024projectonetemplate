@@ -55,9 +55,6 @@ def attack():
 
     return jsonify({"message": f"{character.name} attacked {enemy.name}"})
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 # Import for additional sections
 # from flask import Flask, redirect, request, url_for, session
 # import auth
@@ -442,8 +439,6 @@ def main():
 
     game = Game(parser, heroes, [location1, location2])
     game.start()
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render sets $PORT

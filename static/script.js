@@ -216,6 +216,7 @@ function addThanosIfNecessary() {
     }
 }
 
+
 // Start the battle on page load
 window.onload = function() {
     startBattle();

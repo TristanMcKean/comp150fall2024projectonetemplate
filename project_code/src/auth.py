@@ -1,9 +1,8 @@
 import os
 import requests
 from flask import Flask, session, redirect, request, url_for
-from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import WebApplicationClient
-from models import User, db
+from project_code.src.models import User, db
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")

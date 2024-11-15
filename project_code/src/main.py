@@ -6,7 +6,7 @@ import auth
 from statistics import StatisticsError
 from typing import List
 from enum import Enum
-from flask import Flask, request, jsonify, redirect, session, url_for
+from flask import Flask, render_template, request, jsonify, redirect, session, url_for
 from game_logic import Character, Event, UserInputParser, Game, Location
 
 
@@ -73,7 +73,7 @@ def callback():
     code = request.args.get("code")
     user_info = auth.get_google_user_info(code)
     session['user'] = user_info
-    return redirect(url_for("game"))
+    return redirect(url_for("index"))
 
 
 @app.route("/game")
@@ -81,6 +81,10 @@ def game():
     if 'user' not in session:
         return redirect(url_for("login"))
     return "Game Start!"
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 # Classes definitions start here
 class EventStatus(Enum):
@@ -441,7 +445,7 @@ def main():
     game.start()
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render sets $PORT
+    port = int(os.environ.get("PORT", 10000))  # Render sets $PORT
     app.run(host="0.0.0.0", port=port)
 
 

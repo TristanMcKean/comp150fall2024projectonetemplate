@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 
+
 @app.route("/login")
 def login():
     google_auth_url = auth.get_google_auth_url()

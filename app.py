@@ -101,6 +101,7 @@ def get_event():
 @app.route('/attack', methods=['POST'])
 def attack():
     """Handle character attacks"""
+    global loki_defeated, ultron_defeated
     data = request.json
     char_name = data['character']
     attack_type = data['attack_type']

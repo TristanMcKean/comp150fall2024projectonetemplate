@@ -1,7 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify, session
-from models import db, User
+from flask import Flask, render_template, request, jsonify, session
+from comp150fall2024projectonetemplate.project_code.src.models import db, User
 import os
-from game_logic import Character, Game
+from comp150fall2024projectonetemplate.project_code.src.game_logic import Character, Game
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")

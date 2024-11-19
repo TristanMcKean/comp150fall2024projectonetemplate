@@ -1,62 +1,9 @@
-import json
 import os
-import sys
 import random
-from statistics import StatisticsError
-from typing import List
 from enum import Enum
-<<<<<<< HEAD
-
-
-from flask import Flask, request, jsonify
-import random
 from typing import List
-from enum import Enum
 
-# Import your existing classes here
-from your_game_code import Character, Event, UserInputParser, FinalBoss, Game, Location
-
-app = Flask(__name__)
-
-# Initialize characters and game
-characters = [
-    Character("Iron Man"),
-    Character("Captain America"),
-    Character("Thor")
-]
-locations = [Location([Event({...})])]  # Add your events here
-parser = UserInputParser()
-game = Game(parser, characters, locations)
-
-# API endpoint to get available characters
-@app.route('/get_characters', methods=['GET'])
-def get_characters():
-    return jsonify([{"name": char.name, "health": char.health, "hero_class": char.hero_class} for char in characters])
-
-# API endpoint to attack
-@app.route('/attack', methods=['POST'])
-def attack():
-    data = request.json
-    char_name = data['character']
-    attack_type = data['attack_type']
-    
-    character = next((c for c in characters if c.name == char_name), None)
-    if not character:
-        return jsonify({"error": "Character not found"}), 404
-
-    chosen_stat = character.get_stats()[0]  # Select a stat (for simplicity)
-    enemy = game.locations[0].get_event().enemy  # Use the first enemy for now
-
-    character.attack(chosen_stat, attack_type, enemy)
-    return jsonify({"message": f"{character.name} attacked {enemy.name}"})
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-=======
-import turtle as t
->>>>>>> c0303c5b5660efc498c68c5054554ea8eb73ba1c
-from flask import Flask, redirect, request, url_for, session
+from flask import Flask, redirect, request, url_for, session, jsonify
 import auth
 
 app = Flask(__name__)
@@ -78,16 +25,6 @@ def game():
         return redirect(url_for("login"))
     return "Game Start!"
 
-if __name__ == "__'main'__":
-<<<<<<< HEAD
-    app.run(port=5000) '''
-
-
-
-
-=======
-    app.run(port=5000)'''
->>>>>>> c0303c5b5660efc498c68c5054554ea8eb73ba1c
 
 class EventStatus(Enum):
     UNKNOWN = "unknown"

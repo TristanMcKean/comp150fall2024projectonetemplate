@@ -3,13 +3,11 @@ import random
 from enum import Enum
 from typing import List
 
-from flask import Flask, redirect, request, url_for, session, jsonify
-import auth
+from flask import Flask, redirect, request, url_for, session
+from venv import auth
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-
-
 
 @app.route("/login")
 def login():
@@ -19,11 +17,10 @@ def login():
 def callback():
     code = request.args.get("code")
     user_info = auth.get_google_user_info(code)
-    session['user'] = user_info
     return redirect(url_for("game"))
 @app.route("/game")
 def game():
-    if 'user' not in session:
+    if 'user_id' not in session:
         return redirect(url_for("login"))
     return "Game Start!"
 

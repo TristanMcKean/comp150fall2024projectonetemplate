@@ -9,6 +9,8 @@ import os
 # Explicitly specify the .env file path if needed
 load_dotenv(dotenv_path=".env")
 
+import auth
+
 # Debugging: Print variables to confirm they're loaded
 print("GOOGLE_CLIENT_ID:", os.getenv("GOOGLE_CLIENT_ID"))
 print("GOOGLE_CLIENT_SECRET:", os.getenv("GOOGLE_CLIENT_SECRET"))

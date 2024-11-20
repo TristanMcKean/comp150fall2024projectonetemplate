@@ -4,6 +4,7 @@ from typing import List
 from enum import Enum
 from database import db
 
+
 class EventStatus(Enum):
     UNKNOWN = "unknown"
     PASS = "pass"
@@ -181,7 +182,7 @@ class Event:
         """Simulate the event and return the outcome."""
         print(f"Event Triggered: {self.primary_attribute}")
         if self.enemy:
-            print(f"Enemy Encountered: {self.enemy.name} with {self.enemy.health} health")
+            print(f"Enemy Encountered: {self.enemy['name']} with {self.enemy['health']} health")
         return {
             "status": EventStatus.PASS if not self.enemy else EventStatus.UNKNOWN,
             "enemy": self.enemy

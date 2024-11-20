@@ -4,7 +4,7 @@ import auth
 import random
 import json
 from game_logic import Character, Game, Event, Location, UserInputParser
-
+##ignore
 # Flask app setup
 app = Flask(__name__)
 app.secret_key = "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"  # Replace with a secure key in production

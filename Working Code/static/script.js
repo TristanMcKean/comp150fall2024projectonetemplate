@@ -3,7 +3,6 @@ let currentEnemies = [
     { name: 'Ultron', health: 100, attackPower: 15 }
 ];
 
-// Example heroes (can be dynamically generated from the backend)
 let heroes = [
     { name: 'Iron Man', health: 100 },
     { name: 'Captain America', health: 120 },
@@ -13,13 +12,11 @@ let heroes = [
 let battleOver = false;
 let thanosDefeated = false;
 
-// Start the battle and display heroes and enemies
 function startBattle() {
     displayHeroes();
     displayEnemies();
 }
 
-// Display heroes on the page
 function displayHeroes() {
     let heroesList = document.getElementById('heroes-list');
     heroesList.innerHTML = '';
@@ -30,7 +27,6 @@ function displayHeroes() {
     });
 }
 
-// Display enemies on the page
 function displayEnemies() {
     let enemiesList = document.getElementById('enemies-list');
     enemiesList.innerHTML = '';
@@ -41,14 +37,12 @@ function displayEnemies() {
     });
 }
 
-// Perform action (attack or special)
 function performAction(action) {
     if (battleOver) return;
     if (action === 'attack') attackEnemy();
     else if (action === 'special') useSpecialMove();
 }
 
-// Hero attacks the enemy
 function attackEnemy() {
     let enemy = currentEnemies[0];
     let hero = heroes[0];
@@ -77,22 +71,21 @@ function attackEnemy() {
         }
     }
 
-    enemyCounterAttack(hero);
+    let counterStatus = enemyCounterAttack(hero);
     displayEnemies();
     displayHeroes();
-    updateBattleStatus(battleStatus);
+    updateBattleStatus(`${battleStatus}\n${counterStatus}`);
     checkHeroesHealth();
 }
 
-// Use a special move
 function useSpecialMove() {
     let enemy = currentEnemies[0];
     let hero = heroes[0];
 
-    let battleStatus = `${hero.name} uses a special move against ${enemy.name}!`;
     let specialMoveDamage = getRandomDamage(40, 60);
     enemy.health -= specialMoveDamage;
 
+    let battleStatus = `${hero.name} uses a special move against ${enemy.name}!`;
     battleStatus += `\n${enemy.name} takes ${specialMoveDamage} damage!`;
 
     if (enemy.health <= 0) {
@@ -114,36 +107,33 @@ function useSpecialMove() {
         }
     }
 
-    enemyCounterAttack(hero);
+    let counterStatus = enemyCounterAttack(hero);
     displayEnemies();
     displayHeroes();
-    updateBattleStatus(battleStatus);
+    updateBattleStatus(`${battleStatus}\n${counterStatus}`);
     checkHeroesHealth();
 }
 
-// Update battle status text
 function updateBattleStatus(statusText) {
     let battleStatusElement = document.getElementById('battle-status');
     battleStatusElement.textContent = statusText;
 }
 
-// Enemy counter-attack logic
 function enemyCounterAttack(hero) {
     let enemy = currentEnemies[0];
     let counterAttackDamage = getRandomDamage(enemy.attackPower - 5, enemy.attackPower + 5);
     hero.health -= counterAttackDamage;
 
-    let battleStatus = `${enemy.name} counter-attacks ${hero.name} for ${counterAttackDamage} damage!`;
+    let counterStatus = `${enemy.name} counter-attacks ${hero.name} for ${counterAttackDamage} damage!`;
 
     if (hero.health <= 0) {
-        battleStatus += `\n${hero.name} has been defeated!`;
+        counterStatus += `\n${hero.name} has been defeated!`;
         heroes = heroes.filter(h => h !== hero);
     }
 
-    updateBattleStatus(battleStatus);
+    return counterStatus;
 }
 
-// Check if any heroes are dead
 function checkHeroesHealth() {
     heroes.forEach(hero => {
         if (hero.health <= 0) {
@@ -158,12 +148,10 @@ function checkHeroesHealth() {
     }
 }
 
-// Function to get random damage within a range
 function getRandomDamage(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Show win screen
 function showWinScreen() {
     let battleStatus = document.getElementById('battle-status');
     battleStatus.innerHTML = `
@@ -173,7 +161,6 @@ function showWinScreen() {
     `;
 }
 
-// Show game over screen
 function showGameOverScreen(message) {
     let battleStatus = document.getElementById('battle-status');
     battleStatus.innerHTML = `
@@ -182,12 +169,10 @@ function showGameOverScreen(message) {
     `;
 }
 
-// Restart the game
 function restartGame() {
     location.reload();
 }
 
-// Start the battle on page load
 window.onload = function() {
     startBattle();
 };

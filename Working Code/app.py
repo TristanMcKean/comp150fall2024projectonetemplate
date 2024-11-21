@@ -89,6 +89,14 @@ def login():
     google_auth_url = auth.get_google_auth_url()
     return redirect(google_auth_url)
 
+@app.route('/arena')
+def arena():
+    return render_template('arena.html')  # This is where your arena.html is served
+
+@app.route('/heroes')
+def heroes():
+    return render_template('heroes.html')
+
 @app.route("/callback")
 def callback():
     code = request.args.get("code")

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Heroes - Meet the Heroes</title>
+    <style>
+        /* General Body Styling */
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #f0f0f0;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 10px #000;
+            margin-bottom: 30px;
+        }
+
+        .hero-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-items: center; /* Center the grid items horizontally */
+        }
+
+        .hero-card {
+            background-color: #1f2a36;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .hero-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .hero-card h2 {
+            font-size: 1.8rem;
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.2rem;
+            color: #fff;
+            background-color: #e94560;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff306a;
+            transform: translateY(-5px);
+        }
+
+        button:active {
+            transform: translateY(-2px);
+            box-shadow: 1px 1px 5px #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 Meet the Marvel Heroes 🌟</h1>
+
+    <div class="hero-list">
+        <!-- Example Hero Card -->
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='images/iron-man.jpg') }}" alt="Iron Man">
+            <h2>Iron Man</h2>
+            <p>A genius billionaire with a powered armor suit.</p>
+        </div>
+
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='images/captain-america.jpg') }}" alt="Captain America">
+            <h2>Captain America</h2>
+            <p>Enhanced strength and agility with a shield that never quits.</p>
+        </div>
+
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='images/thor.jpg') }}" alt="Thor">
+            <h2>Thor</h2>
+            <p>The God of Thunder, wielding Mjolnir to command lightning.</p>
+        </div>
+
+
+        <!-- Add more hero cards here -->
+    </div>
+
+    <!-- Button to Return to Arena or Battle -->
+    <div class="button-container">
+        <button onclick="window.location.href='/arena'">Back to Arena</button>
+    </div>
+
+</body>
+</html>

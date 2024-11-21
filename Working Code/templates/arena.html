@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Heroes Adventure - Arena</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #f0f0f0;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 10px #000;
+            margin-bottom: 30px;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px #000;
+            color: #e94560;
+            line-height: 1.6;
+        }
+
+        .intro-text p {
+            margin: 10px 0;
+        }
+
+        ul {
+            list-style-type: disc;  /* Bullet points */
+            padding-left: 0;        /* Remove default left padding */
+            text-align: center;     /* Center the text within the list items */
+            margin: 0 auto;         /* Center the entire list horizontally */
+            display: flex;          /* Use flexbox to center the list */
+            flex-direction: column; /* Stack the list items vertically */
+            align-items: center;    /* Center items horizontally */
+        }
+
+
+        .button-container {
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            color: #fff;
+            background-color: #e94560;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff306a;
+            transform: translateY(-5px);
+        }
+
+        button:active {
+            transform: translateY(-2px);
+            box-shadow: 1px 1px 5px #000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Join the Fight Against Evil!</h1>
+    <div class="intro-text">
+        <p>The world is in peril. Dark forces are gathering, and powerful enemies are attacking cities across the globe.</p>
+        <p>Iron Man, Captain America, Thor, and other heroes have come together to protect humanity.</p>
+        <p>But the heroes know that these battles are just a prelude to a larger threat...</p>
+        <p>Thanos, the Mad Titan, is on the horizon, seeking the Infinity Stones to reshape the universe to his twisted vision.</p>
+
+        <p><strong>Your mission:</strong></p>
+        <ul>
+            <li>Assemble your team of heroes</li>
+            <li>Defeat the villains threatening each location</li>
+            <li>Gather your strength for the final battle with Thanos</li>
+        </ul>
+
+        <p>The fate of the universe rests in your hands!</p>
+    </div>
+
+    <!-- Button to begin the game or continue -->
+    <div class="button-container">
+
+    </div>
+
+    <button onclick="window.location.href='/heroes'">Meet the Heroes</button> <!-- Redirect to Heroes list -->
+    <button onclick="window.location.href='/battle'">Enter the Battle</button> <!-- Change to /battle -->
+
+
+</body>
+
+</html>
+

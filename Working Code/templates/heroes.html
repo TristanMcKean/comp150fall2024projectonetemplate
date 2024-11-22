@@ -27,7 +27,7 @@
 
         .hero-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust to fit five heroes */
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -85,34 +85,72 @@
             transform: translateY(-2px);
             box-shadow: 1px 1px 5px #000;
         }
+
+        /* Home Button Styling */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #e94560;
+            color: #fff;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .home-button:hover {
+            background-color: #ff306a;
+            transform: scale(1.05);
+        }
+
+        .home-button:active {
+            transform: scale(1);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 <body>
 
+    <!-- Home Button -->
+    <a href="/" class="home-button">Home</a>
+
     <h1>🌟 Meet the Marvel Heroes 🌟</h1>
 
     <div class="hero-list">
-        <!-- Example Hero Card -->
+        <!-- Existing Hero Cards -->
         <div class="hero-card">
-            <img src="{{ url_for('static', filename='images/iron-man.jpg') }}" alt="Iron Man">
+            <img src="{{ url_for('static', filename='image/ironman.webp') }}" alt="Iron Man">
             <h2>Iron Man</h2>
             <p>A genius billionaire with a powered armor suit.</p>
         </div>
 
         <div class="hero-card">
-            <img src="{{ url_for('static', filename='images/captain-america.jpg') }}" alt="Captain America">
+            <img src="{{ url_for('static', filename='image/captainamerica.webp') }}" alt="Captain America">
             <h2>Captain America</h2>
             <p>Enhanced strength and agility with a shield that never quits.</p>
         </div>
 
         <div class="hero-card">
-            <img src="{{ url_for('static', filename='images/thor.jpg') }}" alt="Thor">
+            <img src="{{ url_for('static', filename='image/thor.webp') }}" alt="Thor">
             <h2>Thor</h2>
             <p>The God of Thunder, wielding Mjolnir to command lightning.</p>
         </div>
 
+        <!-- New Hero Cards -->
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='image/spiderman.webp') }}" alt="Spider-Man">
+            <h2>Spider-Man</h2>
+            <p>A teenage superhero with incredible agility and a knack for web-slinging.</p>
+        </div>
 
-        <!-- Add more hero cards here -->
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='image/blackwidow.webp') }}" alt="Black Widow">
+            <h2>Black Widow</h2>
+            <p>A skilled spy and martial artist with unmatched combat expertise.</p>
+        </div>
     </div>
 
     <!-- Button to Return to Arena or Battle -->

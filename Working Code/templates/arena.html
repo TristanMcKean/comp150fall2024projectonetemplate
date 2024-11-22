@@ -75,10 +75,38 @@
             transform: translateY(-2px);
             box-shadow: 1px 1px 5px #000;
         }
+
+        /* Home Button Styling */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #e94560;
+            color: #fff;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .home-button:hover {
+            background-color: #ff306a;
+            transform: scale(1.05);
+        }
+
+        .home-button:active {
+            transform: scale(1);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Home Button -->
+    <a href="/" class="home-button">Home</a>
+
     <h1> Join the Fight Against Evil!</h1>
     <div class="intro-text">
         <p>The world is in peril. Dark forces are gathering, and powerful enemies are attacking cities across the globe.</p>
@@ -98,14 +126,10 @@
 
     <!-- Button to begin the game or continue -->
     <div class="button-container">
-
+        <button onclick="window.location.href='/heroes'">Meet the Heroes</button> <!-- Redirect to Heroes list -->
+        <button onclick="window.location.href='/battle'">Enter the Battle</button> <!-- Change to /battle -->
     </div>
-
-    <button onclick="window.location.href='/heroes'">Meet the Heroes</button> <!-- Redirect to Heroes list -->
-    <button onclick="window.location.href='/battle'">Enter the Battle</button> <!-- Change to /battle -->
-
 
 </body>
 
 </html>
-

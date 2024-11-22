@@ -84,11 +84,13 @@ function attackEnemy(hero, enemy) {
 
     if (enemy.health <= 0) {
         battleStatus += `\n${enemy.name} has been defeated!`;
-        currentEnemies.splice(currentEnemies.indexOf(enemy), 1);
+        currentEnemies.splice(currentEnemies.indexOf(enemy), 1); // Remove defeated enemy
 
+        // Check if all enemies are defeated and Thanos hasn't been added yet
         if (currentEnemies.length === 0 && !thanosDefeated) {
             currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
             battleStatus += "\nAll enemies defeated! Thanos appears!";
+            updateDropdowns();  // Update the dropdowns to include Thanos
         }
     }
 
@@ -113,11 +115,13 @@ function useSpecialMove(hero, enemy) {
 
     if (enemy.health <= 0) {
         battleStatus += `\n${enemy.name} has been defeated!`;
-        currentEnemies.splice(currentEnemies.indexOf(enemy), 1);
+        currentEnemies.splice(currentEnemies.indexOf(enemy), 1); // Remove defeated enemy
 
+        // Check if all enemies are defeated and Thanos hasn't been added yet
         if (currentEnemies.length === 0 && !thanosDefeated) {
             currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
             battleStatus += "\nAll enemies defeated! Thanos appears!";
+            updateDropdowns();  // Update the dropdowns to include Thanos
         }
     }
 

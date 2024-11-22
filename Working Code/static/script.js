@@ -4,17 +4,19 @@ let currentEnemies = [
 ];
 
 let heroes = [
-    { name: 'Iron Man', health: 100 },
-    { name: 'Captain America', health: 120 },
-    { name: 'Thor', health: 150 }
+    { name: 'Iron Man', health: 100, energy: 100 },
+    { name: 'Captain America', health: 120, energy: 100 },
+    { name: 'Thor', health: 150, energy: 100 }
 ];
 
 let battleOver = false;
 let thanosDefeated = false;
 
+// Start the battle
 function startBattle() {
     displayHeroes();
     displayEnemies();
+    updateDropdowns();
 }
 
 function displayHeroes() {
@@ -22,7 +24,7 @@ function displayHeroes() {
     heroesList.innerHTML = '';
     heroes.forEach(hero => {
         let li = document.createElement('li');
-        li.textContent = `${hero.name} - HP: ${hero.health}`;
+        li.textContent = `${hero.name} - HP: ${hero.health}, Energy: ${hero.energy}`;
         heroesList.appendChild(li);
     });
 }
@@ -37,119 +39,125 @@ function displayEnemies() {
     });
 }
 
+function updateDropdowns() {
+    let heroSelect = document.getElementById('hero-select');
+    let enemySelect = document.getElementById('enemy-select');
+    heroSelect.innerHTML = '';
+    enemySelect.innerHTML = '';
+
+    heroes.forEach((hero, index) => {
+        let option = document.createElement('option');
+        option.value = index;
+        option.textContent = hero.name;
+        heroSelect.appendChild(option);
+    });
+
+    currentEnemies.forEach((enemy, index) => {
+        let option = document.createElement('option');
+        option.value = index;
+        option.textContent = enemy.name;
+        enemySelect.appendChild(option);
+    });
+}
+
 function performAction(action) {
     if (battleOver) return;
-    if (action === 'attack') attackEnemy();
-    else if (action === 'special') useSpecialMove();
+
+    let heroIndex = document.getElementById('hero-select').value;
+    let enemyIndex = document.getElementById('enemy-select').value;
+
+    let hero = heroes[heroIndex];
+    let enemy = currentEnemies[enemyIndex];
+
+    if (action === 'attack') {
+        attackEnemy(hero, enemy);
+    } else if (action === 'special') {
+        useSpecialMove(hero, enemy);
+    }
 }
 
-function attackEnemy() {
-    let enemy = currentEnemies[0];
-    let hero = heroes[0];
+function attackEnemy(hero, enemy) {
+    let damage = getRandomDamage(15, 25);
+    enemy.health -= damage;
 
-    let heroAttackDamage = getRandomDamage(15, 25);
-    enemy.health -= heroAttackDamage;
-
-    let battleStatus = `${hero.name} attacks ${enemy.name} for ${heroAttackDamage} damage!`;
+    let battleStatus = `${hero.name} attacks ${enemy.name} for ${damage} damage!`;
 
     if (enemy.health <= 0) {
         battleStatus += `\n${enemy.name} has been defeated!`;
+        currentEnemies.splice(currentEnemies.indexOf(enemy), 1);
 
-        if (enemy.name === 'Thanos') {
-            thanosDefeated = true;
-            currentEnemies = currentEnemies.filter(e => e.name !== 'Thanos');
-            displayEnemies();
-            updateBattleStatus("You defeated Thanos! The universe is saved!");
-            showWinScreen();
-            return;
-        }
-
-        currentEnemies.shift();
         if (currentEnemies.length === 0 && !thanosDefeated) {
-            battleStatus += "\nYou've defeated all enemies! Thanos appears!";
             currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
+            battleStatus += "\nAll enemies defeated! Thanos appears!";
         }
     }
 
     let counterStatus = enemyCounterAttack(hero);
-    displayEnemies();
-    displayHeroes();
     updateBattleStatus(`${battleStatus}\n${counterStatus}`);
     checkHeroesHealth();
+    displayEnemies();
+    displayHeroes();
 }
 
-function useSpecialMove() {
-    let enemy = currentEnemies[0];
-    let hero = heroes[0];
+function useSpecialMove(hero, enemy) {
+    if (hero.energy < 50) {
+        updateBattleStatus(`${hero.name} doesn't have enough energy to use a special move!`);
+        return;
+    }
 
-    let specialMoveDamage = getRandomDamage(40, 60);
-    enemy.health -= specialMoveDamage;
+    let damage = getRandomDamage(40, 60);
+    enemy.health -= damage;
+    hero.energy -= 50;
 
-    let battleStatus = `${hero.name} uses a special move against ${enemy.name}!`;
-    battleStatus += `\n${enemy.name} takes ${specialMoveDamage} damage!`;
+    let battleStatus = `${hero.name} uses a special move on ${enemy.name} for ${damage} damage!`;
 
     if (enemy.health <= 0) {
         battleStatus += `\n${enemy.name} has been defeated!`;
+        currentEnemies.splice(currentEnemies.indexOf(enemy), 1);
 
-        if (enemy.name === 'Thanos') {
-            thanosDefeated = true;
-            currentEnemies = currentEnemies.filter(e => e.name !== 'Thanos');
-            displayEnemies();
-            updateBattleStatus("You defeated Thanos! The universe is saved!");
-            showWinScreen();
-            return;
-        }
-
-        currentEnemies.shift();
         if (currentEnemies.length === 0 && !thanosDefeated) {
-            battleStatus += "\nYou've defeated all enemies! Thanos appears!";
             currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
+            battleStatus += "\nAll enemies defeated! Thanos appears!";
         }
     }
 
     let counterStatus = enemyCounterAttack(hero);
-    displayEnemies();
-    displayHeroes();
     updateBattleStatus(`${battleStatus}\n${counterStatus}`);
     checkHeroesHealth();
-}
-
-function updateBattleStatus(statusText) {
-    let battleStatusElement = document.getElementById('battle-status');
-    battleStatusElement.textContent = statusText;
+    displayEnemies();
+    displayHeroes();
 }
 
 function enemyCounterAttack(hero) {
-    let enemy = currentEnemies[0];
-    let counterAttackDamage = getRandomDamage(enemy.attackPower - 5, enemy.attackPower + 5);
-    hero.health -= counterAttackDamage;
+    let enemy = currentEnemies[Math.floor(Math.random() * currentEnemies.length)];
+    let damage = getRandomDamage(enemy.attackPower - 5, enemy.attackPower + 5);
+    hero.health -= damage;
 
-    let counterStatus = `${enemy.name} counter-attacks ${hero.name} for ${counterAttackDamage} damage!`;
+    let counterStatus = `${enemy.name} counter-attacks ${hero.name} for ${damage} damage!`;
 
     if (hero.health <= 0) {
         counterStatus += `\n${hero.name} has been defeated!`;
-        heroes = heroes.filter(h => h !== hero);
+        heroes.splice(heroes.indexOf(hero), 1);
     }
 
     return counterStatus;
 }
 
 function checkHeroesHealth() {
-    heroes.forEach(hero => {
-        if (hero.health <= 0) {
-            alert(`${hero.name} has been defeated!`);
-            heroes = heroes.filter(h => h !== hero);
-        }
-    });
-
     if (heroes.length === 0) {
-        updateBattleStatus("Game Over! All heroes are defeated.");
-        showGameOverScreen("Sorry, you lost! Better luck next time.");
+        updateBattleStatus("Game Over! All heroes have been defeated.");
+        showGameOverScreen("You lost! Better luck next time.");
+        battleOver = true;
     }
 }
 
 function getRandomDamage(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function updateBattleStatus(statusText) {
+    let battleStatusElement = document.getElementById('battle-status');
+    battleStatusElement.textContent = statusText;
 }
 
 function showWinScreen() {
@@ -173,6 +181,6 @@ function restartGame() {
     location.reload();
 }
 
-window.onload = function() {
+window.onload = function () {
     startBattle();
 };

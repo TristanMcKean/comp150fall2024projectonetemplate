@@ -7,48 +7,66 @@
     <link rel="stylesheet" href="static/styles.css">
     <style>
         body {
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364); /* Matching background gradient */
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
             color: #f0f0f0;
             font-family: 'Roboto', 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             height: 100vh;
             margin: 0;
             padding: 10px;
             box-sizing: border-box;
         }
+
         h1 {
-            font-size: 2rem; /* Smaller font size for the title */
+            font-size: 3rem; /* Larger font size for the title */
             text-shadow: 2px 2px 5px #000;
-            margin-bottom: 20px;
+            margin: 30px 0; /* Move title down slightly */
         }
+
         h2 {
-            font-size: 1.5rem; /* Reduced size for subheadings */
+            font-size: 1.5rem;
             text-shadow: 1px 1px 3px #000;
             margin-bottom: 15px;
         }
+
         h3 {
-            font-size: 1.2rem; /* Smaller for battle status title */
+            font-size: 1.2rem;
             margin-top: 20px;
         }
+
+        #hero-stats, #enemy-stats {
+            margin-right: auto; /* Align lists to the left */
+            margin-left: 50px;
+        }
+
         #heroes-list, #enemies-list {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
+
         #heroes-list li, #enemies-list li {
-            font-size: 1rem; /* Smaller font size for list items */
+            font-size: 1rem;
             padding: 8px;
             margin: 3px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
             box-shadow: 2px 2px 5px #000;
         }
+
+        #actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center dropdowns and buttons */
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
         button {
-            padding: 10px 20px; /* Smaller padding */
-            font-size: 1.2rem; /* Smaller font size for buttons */
+            padding: 10px 20px;
+            font-size: 1.2rem;
             color: #fff;
             background-color: #e94560;
             border: none;
@@ -58,17 +76,26 @@
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 2px 2px 6px #000;
         }
+
         button:hover {
             background-color: #ff306a;
             transform: translateY(-2px);
         }
-        #actions {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
+
+        select {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            margin: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            box-shadow: 2px 2px 6px #000;
+            text-align: center;
         }
+
         #battle-status {
-            font-size: 1rem; /* Smaller font size for battle status */
+            font-size: 1rem;
             margin-top: 15px;
             padding: 8px;
             background-color: rgba(255, 255, 255, 0.1);
@@ -79,7 +106,6 @@
             text-align: center;
         }
 
-        /* Home Button Styling */
         .home-button {
             position: absolute;
             top: 20px;
@@ -126,9 +152,21 @@
     </div>
 
     <div id="actions">
+        <select id="hero-select" onchange="updateBattleStatus()">
+            <!-- Hero options will be dynamically populated -->
+        </select>
+
+        <span>is attacking</span>
+
+        <select id="enemy-select" onchange="updateBattleStatus()">
+            <!-- Enemy options will be dynamically populated -->
+        </select>
+    </div>
+
+
         <button onclick="performAction('attack')">Attack</button>
         <button onclick="performAction('special')">Use Special Move</button>
-    </div>
+
 
     <h3>Battle Status</h3>
     <p id="battle-status"></p>

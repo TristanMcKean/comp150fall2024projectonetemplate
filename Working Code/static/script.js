@@ -1,12 +1,15 @@
 let currentEnemies = [
     { name: 'Loki', health: 100, attackPower: 10 },
-    { name: 'Ultron', health: 100, attackPower: 15 }
+    { name: 'Ultron', health: 100, attackPower: 15 },
+    { name: 'Hela', health: 150, attackPower: 20 } // New enemy: Hela
 ];
 
 let heroes = [
     { name: 'Iron Man', health: 100, energy: 100 },
     { name: 'Captain America', health: 120, energy: 100 },
-    { name: 'Thor', health: 150, energy: 100 }
+    { name: 'Thor', health: 150, energy: 100 },
+    { name: 'Spider-Man', health: 90, energy: 120 }, // Added Spider-Man
+    { name: 'Black Widow', health: 80, energy: 110 } // Added Black Widow
 ];
 
 let battleOver = false;

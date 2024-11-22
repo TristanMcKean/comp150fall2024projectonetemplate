@@ -20,9 +20,9 @@
         }
 
         h1 {
-            font-size: 3rem; /* Larger font size for the title */
+            font-size: 3rem;
             text-shadow: 2px 2px 5px #000;
-            margin: 30px 0; /* Move title down slightly */
+            margin: 30px 0;
         }
 
         h2 {
@@ -33,11 +33,13 @@
 
         h3 {
             font-size: 1.2rem;
-            margin-top: 20px;
+            margin-top: 10px;
+            position: relative;
+            top: -100px;
         }
 
         #hero-stats, #enemy-stats {
-            margin-right: auto; /* Align lists to the left */
+            margin-right: auto;
             margin-left: 50px;
         }
 
@@ -59,9 +61,11 @@
         #actions {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center dropdowns and buttons */
-            margin-top: 15px;
+            align-items: center;
+            margin-top: 0;
             margin-bottom: 20px;
+            position: relative;
+            top: -150px;
         }
 
         button {
@@ -75,6 +79,8 @@
             margin: 10px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 2px 2px 6px #000;
+            position: relative;
+            top: -150px;
         }
 
         button:hover {
@@ -96,7 +102,7 @@
 
         #battle-status {
             font-size: 1rem;
-            margin-top: 15px;
+            margin-top: 5px;
             padding: 8px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
@@ -104,6 +110,8 @@
             width: 80%;
             max-width: 400px;
             text-align: center;
+            position: relative;
+            top: -120px;
         }
 
         .home-button {
@@ -137,6 +145,9 @@
 
     <h1>Marvel Heroes Adventure</h1>
 
+    <!-- Add the prompt phrase here -->
+    <p id="villain-prompt">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
+
     <div id="hero-stats">
         <h2>Your Heroes</h2>
         <ul id="heroes-list">
@@ -163,10 +174,8 @@
         </select>
     </div>
 
-
-        <button onclick="performAction('attack')">Attack</button>
-        <button onclick="performAction('special')">Use Special Move</button>
-
+    <button onclick="performAction('attack')">Attack</button>
+    <button onclick="performAction('special')">Use Special Move</button>
 
     <h3>Battle Status</h3>
     <p id="battle-status"></p>

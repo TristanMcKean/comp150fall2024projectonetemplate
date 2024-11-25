@@ -18,15 +18,12 @@ print("REDIRECT_URI:", os.getenv("REDIRECT_URI"))
 print("FLASK_SECRET_KEY:", os.getenv("FLASK_SECRET_KEY"))
 print("DATABASE_URL:", os.getenv("DATABASE_URL"))
 
-import auth
-
 # Use environment variables for sensitive data
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "default_secret_key")
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///game.db")
-
 
 # Flask app setup
 # Explicitly specify `templates` and `static` folders within the "WorkingCode" directory
@@ -139,7 +136,9 @@ def index():
 
 @app.route("/battle")
 def battle():
-    return render_template("battle.html")
+    # Check if only Thanos is left
+    thanos_only = len(game.enemies) == 1 and game.enemies[0]["name"] == "Thanos"
+    return render_template("battle.html", thanos_only=thanos_only)
 
 @app.route("/get_characters", methods=["GET"])
 def get_characters():
@@ -159,8 +158,11 @@ def attack():
     if not character:
         return jsonify({"error": "Character not found"}), 404
 
-    # Select a random enemy from the game object
-    current_enemy = random.choice(game.enemies)
+    # Select the first available enemy from the game object
+    if not game.enemies:
+        return jsonify({"message": "All enemies are defeated! Prepare for the next challenge."}), 200
+
+    current_enemy = game.enemies[0]
 
     if attack_type == "special":
         character.perform_special_move(current_enemy)
@@ -170,8 +172,18 @@ def attack():
 
     # Check if enemy is defeated
     if current_enemy['health'] <= 0:
-        game.enemies.remove(current_enemy)  # Remove defeated enemy
-        return jsonify({"message": f"You defeated {current_enemy['name']}!"})
+        game.enemies.pop(0)  # Remove the defeated enemy
+        if game.enemies:
+            next_enemy = game.enemies[0]
+            return jsonify({
+                "message": f"You defeated {current_enemy['name']}! Next enemy: {next_enemy['name']}",
+                "next_enemy": {
+                    "name": next_enemy['name'],
+                    "health": next_enemy['health']
+                }
+            })
+        else:
+            return jsonify({"message": f"You defeated {current_enemy['name']}! All enemies are defeated!"})
 
     return jsonify({
         "message": f"{character.name} attacked {current_enemy['name']}!",

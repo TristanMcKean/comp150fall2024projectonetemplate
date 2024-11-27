@@ -115,7 +115,7 @@ def callback():
             user = User(
                 email=user_info["email"],
                 name=user_info.get("name", "Unknown"),
-                progress="{}"
+                progress="{}"  # Initialize empty progress if new user
             )
             db.session.add(user)
             db.session.commit()
@@ -125,7 +125,23 @@ def callback():
     # Store user ID in session
     session["user_id"] = user.id
 
-    return redirect(url_for("game_route"))
+    # Redirect to the game start screen
+    return redirect(url_for("game_start"))
+
+@app.route("/game_start")
+def game_start():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.get(session["user_id"])
+    if not user:
+        return jsonify({"error": "User not found. Please log in again."}), 404
+
+    # Load user's progress (you can modify this logic to prepopulate the game state)
+    progress = json.loads(user.progress)
+
+    # Render the game start screen and pass the progress to the template
+    return render_template("game_start.html", progress=progress, user_name=user.name)
 
 @app.route("/game")
 def game_route():

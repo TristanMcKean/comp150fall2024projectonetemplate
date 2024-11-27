@@ -48,6 +48,7 @@ def get_google_user_info(auth_code):
         token_url, headers, body = client.prepare_token_request(
             token_endpoint,
             authorization_response=f"{REDIRECT_URI}?code={auth_code}",
+            redirect_url=REDIRECT_URI,  # Explicitly pass the redirect_uri
             client_id=GOOGLE_CLIENT_ID,
             client_secret=GOOGLE_CLIENT_SECRET,
         )
@@ -70,3 +71,4 @@ def get_google_user_info(auth_code):
         return userinfo_response.json()
     except Exception as e:
         raise RuntimeError(f"Failed to fetch user info: {e}")
+

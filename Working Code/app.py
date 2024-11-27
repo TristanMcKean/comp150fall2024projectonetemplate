@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
-from database import db  # Import `db` from database.py
+from database import db, init_app  # Import `db` and `init_app` from database.py
 import random
 import json
 from game_logic import Character, Game, Event, Location, UserInputParser
@@ -34,10 +34,9 @@ app = Flask(
     static_folder=os.path.join(os.path.dirname(__file__), "static")
 )
 app.secret_key = FLASK_SECRET_KEY
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 
-# Initialize `db` with the Flask app
-db.init_app(app)
+# Initialize the database
+init_app(app)
 
 # Database model
 class User(db.Model):

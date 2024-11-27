@@ -47,6 +47,8 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            height: 150px; /* Fixed height for consistent layout */
+            overflow: hidden; /* Prevent overflow if content exceeds height */
         }
 
         #heroes-list li, #enemies-list li {
@@ -62,10 +64,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 0;
-            margin-bottom: 20px;
+            margin-top: 10px; /* Reduced margin to raise section higher */
             position: relative;
-            top: -150px;
+            top: -20px; /* Adjusted top positioning to raise section */
+            height: 150px; /* Locked height */
+            justify-content: space-evenly; /* Space out items evenly */
+        }
+
+        #action-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         button {
@@ -79,8 +88,6 @@
             margin: 10px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 2px 2px 6px #000;
-            position: relative;
-            top: -150px;
         }
 
         button:hover {
@@ -102,16 +109,16 @@
 
         #battle-status {
             font-size: 1rem;
-            margin-top: 5px;
+            margin-top: 5px; /* Adjusted to add space */
             padding: 8px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
             box-shadow: 2px 2px 5px #000;
-            width: 80%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 550px;
             text-align: center;
             position: relative;
-            top: -120px;
+            top: 0; /* Removed the negative offset */
         }
 
         .home-button {
@@ -145,8 +152,8 @@
 
     <h1>Marvel Heroes Adventure</h1>
 
-    <!-- Add the prompt phrase here -->
-    <p id="villain-prompt">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
+    <!-- Updated battle status section -->
+    <p id="battle-status">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
 
     <div id="hero-stats">
         <h2>Your Heroes</h2>
@@ -163,22 +170,20 @@
     </div>
 
     <div id="actions">
-        <select id="hero-select" onchange="updateBattleStatus()">
-            <!-- Hero options will be dynamically populated -->
-        </select>
+        <div id="action-controls">
+            <select id="hero-select" onchange="updateBattleStatus()">
+                <!-- Hero options will be dynamically populated -->
+            </select>
 
-        <span>is attacking</span>
+            <span>is attacking</span>
 
-        <select id="enemy-select" onchange="updateBattleStatus()">
-            <!-- Enemy options will be dynamically populated -->
-        </select>
+            <select id="enemy-select" onchange="updateBattleStatus()">
+                <!-- Enemy options will be dynamically populated -->
+            </select>
+        </div>
+        <button onclick="performAction('attack')">Attack</button>
+        <button onclick="performAction('special')">Use Special Move</button>
     </div>
-
-    <button onclick="performAction('attack')">Attack</button>
-    <button onclick="performAction('special')">Use Special Move</button>
-
-    <h3>Battle Status</h3>
-    <p id="battle-status"></p>
 
     <script src="static/script.js"></script>
 </body>

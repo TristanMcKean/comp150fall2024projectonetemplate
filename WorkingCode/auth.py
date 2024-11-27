@@ -48,7 +48,6 @@ def get_google_user_info(auth_code):
         token_url, headers, body = client.prepare_token_request(
             token_endpoint,
             authorization_response=f"{REDIRECT_URI}?code={auth_code}",
-            redirect_uri=REDIRECT_URI,  # Use environment variable for dynamic configuration
             client_id=GOOGLE_CLIENT_ID,
             client_secret=GOOGLE_CLIENT_SECRET,
         )

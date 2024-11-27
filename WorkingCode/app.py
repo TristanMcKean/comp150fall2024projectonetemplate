@@ -125,8 +125,8 @@ def callback():
     # Store user ID in session
     session["user_id"] = user.id
 
-    # Redirect to the game start screen
-    return redirect(url_for("gamestart"))
+    # Redirect to the index page after login
+    return redirect(url_for("index"))
 
 @app.route("/gamestart")
 def gamestart():
@@ -171,7 +171,13 @@ def save():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    user_name = None
+    if "user_id" in session:
+        user = User.query.get(session["user_id"])
+        if user:
+            user_name = user.name
+
+    return render_template("index.html", user_name=user_name)
 
 @app.route("/battle")
 def battle():

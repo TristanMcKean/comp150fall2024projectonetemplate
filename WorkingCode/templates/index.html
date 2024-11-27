@@ -161,11 +161,19 @@
     </div>
 
     <div id="welcome-text">
-        <p>Your journey awaits. Sign in to track your progress or dive straight into the battle!</p>
+        {% if user_name %}
+            <p>Welcome back, {{ user_name }}! Ready to continue your adventure?</p>
+        {% else %}
+            <p>Your journey awaits. Sign in to track your progress or dive straight into the battle!</p>
+        {% endif %}
     </div>
 
     <!-- Buttons -->
-    <button onclick="window.location.href='/login'">Sign In with Google</button>
+    {% if user_name %}
+        <button onclick="window.location.href='/gamestart'">Continue Adventure</button>
+    {% else %}
+        <button onclick="window.location.href='/login'">Sign In with Google</button>
+    {% endif %}
     <button onclick="window.location.href='/arena'">Enter the Arena</button>
 </body>
 

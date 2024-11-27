@@ -97,14 +97,33 @@ def heroes():
 @app.route("/callback")
 def callback():
     code = request.args.get("code")
-    user_info = auth.get_google_user_info(code)
 
+    # Fetch user info from Google
+    try:
+        user_info = auth.get_google_user_info(code)
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch user info: {e}"}), 400
+
+    # Ensure user info contains email
+    if "email" not in user_info:
+        return jsonify({"error": "Google did not return an email address"}), 400
+
+    # Try to retrieve the user or create a new one
     user = User.query.filter_by(email=user_info["email"]).first()
     if not user:
-        user = User(email=user_info["email"], name=user_info["name"], progress="{}")
-        db.session.add(user)
+        try:
+            user = User(
+                email=user_info["email"],
+                name=user_info.get("name", "Unknown"),
+                progress="{}"
+            )
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            return jsonify({"error": f"Failed to create user: {e}"}), 500
+
+    # Store user ID in session
     session["user_id"] = user.id
-    db.session.commit()
 
     return redirect(url_for("game_route"))
 
@@ -114,8 +133,12 @@ def game_route():
         return redirect(url_for("login"))
 
     user = User.query.get(session["user_id"])
+    if not user:
+        return jsonify({"error": "User not found. Please log in again."}), 404
+
     progress = json.loads(user.progress)
     return jsonify({"message": f"Welcome back, {user.name}!", "progress": progress})
+
 
 @app.route("/save", methods=["POST"])
 def save():

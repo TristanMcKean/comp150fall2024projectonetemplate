@@ -126,10 +126,10 @@ def callback():
     session["user_id"] = user.id
 
     # Redirect to the game start screen
-    return redirect(url_for("game_start"))
+    return redirect(url_for("gamestart"))
 
-@app.route("/game_start")
-def game_start():
+@app.route("/gamestart")
+def gamestart():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
@@ -141,7 +141,7 @@ def game_start():
     progress = json.loads(user.progress)
 
     # Render the game start screen and pass the progress to the template
-    return render_template("game_start.html", progress=progress, user_name=user.name)
+    return render_template("gamestart.html", progress=progress, user_name=user.name)
 
 @app.route("/game")
 def game_route():

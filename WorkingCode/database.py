@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Retrieve the database URL from the environment
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Default to SQLite for local storage if DATABASE_URL is not set
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///local_game.db")
 
 # Initialize the SQLAlchemy object
 db = SQLAlchemy()

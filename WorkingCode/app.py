@@ -10,7 +10,6 @@ import os
 load_dotenv(dotenv_path=".env")
 
 import auth
-'''ignore'''
 
 # Debugging: Print variables to confirm they're loaded
 print("GOOGLE_CLIENT_ID:", os.getenv("GOOGLE_CLIENT_ID"))
@@ -44,6 +43,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(120))
     progress = db.Column(db.Text, default="{}")  # JSON field to store game progress
+    total_hp = db.Column(db.Integer, default=100)  # Default HP
+    level = db.Column(db.Integer, default=1)  # Default Level
 
 # Game initialization
 def initialize_game():
@@ -88,7 +89,26 @@ def login():
 
 @app.route('/arena')
 def arena():
-    return render_template('arena.html')  # This is where your arena.html is served
+    # Check if the user is signed in
+    if "user_id" in session:
+        user = User.query.get(session["user_id"])
+        if user:
+            # Render the arena with the user's progress
+            return render_template(
+                'arena.html',
+                total_hp=user.total_hp,
+                level=user.level,
+                user_name=user.name
+            )
+
+    # If the user is not signed in, render the arena with default stats
+    return render_template(
+        'arena.html',
+        total_hp=100,  # Default HP for guests
+        level=1,  # Default level for guests
+        user_name="Guest"
+    )
+
 
 @app.route('/heroes')
 def heroes():
@@ -97,18 +117,20 @@ def heroes():
 @app.route("/callback")
 def callback():
     code = request.args.get("code")
+    if not code:
+        return jsonify({"error": "Missing authorization code from Google."}), 400
 
     # Fetch user info from Google
     try:
         user_info = auth.get_google_user_info(code)
     except Exception as e:
-        return jsonify({"error": f"Failed to fetch user info: {e}"}), 400
+        return jsonify({"error": f"Failed to fetch user info: {str(e)}"}), 400
 
     # Ensure user info contains email
     if "email" not in user_info:
-        return jsonify({"error": "Google did not return an email address"}), 400
+        return jsonify({"error": "Google did not return an email address."}), 400
 
-    # Try to retrieve the user or create a new one
+    # Retrieve the user or create a new one
     user = User.query.filter_by(email=user_info["email"]).first()
     if not user:
         try:
@@ -120,13 +142,17 @@ def callback():
             db.session.add(user)
             db.session.commit()
         except Exception as e:
-            return jsonify({"error": f"Failed to create user: {e}"}), 500
+            return jsonify({"error": f"Failed to create user: {str(e)}"}), 500
 
     # Store user ID in session
     session["user_id"] = user.id
 
-    # Redirect to the index page after login
+    # Debugging: Log the session info
+    print("Session info after login:", session)
+
+    # Redirect to the main page
     return redirect(url_for("index"))
+
 
 @app.route("/gamestart")
 def gamestart():
@@ -145,7 +171,7 @@ def gamestart():
     total_hp = progress.get("total_hp", 100)
 
     # Render the game start screen and pass the progress data
-    return render_template("gamestart.html", level=level, total_hp=total_hp, user_name=user.name)
+    return render_template("index.html", level=level, total_hp=total_hp, user_name=user.name)
 
 @app.route("/game")
 def game_route():
@@ -174,15 +200,8 @@ def save():
     total_hp = request.json.get("total_hp")
 
     if level is not None and total_hp is not None:
-        # Load current progress
-        progress = json.loads(user.progress)
-
-        # Update progress with the new values
-        progress["level"] = level
-        progress["total_hp"] = total_hp
-
-        # Save the updated progress back to the database
-        user.progress = json.dumps(progress)
+        user.total_hp = total_hp
+        user.level = level
         db.session.commit()
         return jsonify({"message": "Progress saved!"}), 200
 
@@ -190,13 +209,19 @@ def save():
 
 @app.route("/")
 def index():
-    user_name = None
-    if "user_id" in session:
-        user = User.query.get(session["user_id"])
-        if user:
-            user_name = user.name
+    # Determine login status
+    is_logged_in = "user_id" in session and session["user_id"]
 
-    return render_template("index.html", user_name=user_name)
+    # Retrieve user information if logged in
+    if is_logged_in:
+        user = User.query.get(session["user_id"])
+        if not user:  # Handle invalid user session
+            session.pop("user_id", None)
+            is_logged_in = False
+
+    # Pass login status to template
+    return render_template("index.html", is_logged_in=is_logged_in)
+
 
 @app.route("/battle")
 def battle():

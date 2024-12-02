@@ -36,10 +36,50 @@ function displayHeroes() {
     });
 }
 
+function updateStats(totalHp, level) {
+    // Update stats dynamically on the page
+    let totalHpElement = document.getElementById('total-hp');
+    let levelElement = document.getElementById('level');
+
+    if (totalHpElement) totalHpElement.textContent = totalHp;
+    if (levelElement) levelElement.textContent = level;
+
+    // Save stats to the backend
+    saveProgress(totalHp, level);
+}
+
+function saveProgress(totalHp, level) {
+    // Send updated stats to the backend
+    fetch('/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ total_hp: totalHp, level: level })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                console.log(data.message); // Log success message
+            } else {
+                console.error(data.error); // Log error if any
+            }
+        })
+        .catch(err => console.error('Error saving progress:', err));
+}
+
 function startBattle() {
     displayHeroes();
     displayEnemies();
     updateDropdowns();
+
+    // Simulate a stat update for demonstration
+    setTimeout(() => {
+        // Example: Update total_hp and level
+        const newTotalHp = 200; // Replace with actual calculations
+        const newLevel = 3; // Replace with actual calculations
+        updateStats(newTotalHp, newLevel);
+    }, 3000); // Delay to simulate battle progression
 }
 
 function updateDropdowns() {

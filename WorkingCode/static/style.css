@@ -12,10 +12,6 @@ button {
     cursor: pointer;
 }
 
-#hero-stats, #enemy-stats {
-    margin-bottom: 20px;
-}
-
 /* Home Button Styling */
 .home-button {
     position: absolute;

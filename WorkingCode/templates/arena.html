@@ -25,6 +25,8 @@
             font-size: 2.5rem;
             text-shadow: 2px 2px 10px #000;
             margin-bottom: 30px;
+            opacity: 0; /* Initially hidden */
+            animation: fadeInUp 2s ease-in-out forwards;
         }
 
         .intro-text {
@@ -33,6 +35,9 @@
             text-shadow: 1px 1px 3px #000;
             color: #e94560;
             line-height: 1.6;
+            opacity: 0; /* Initially hidden */
+            animation: fadeInUp 2s ease-in-out forwards;
+            animation-delay: 0.5s; /* Delayed start for smoother effect */
         }
 
         .intro-text p {
@@ -40,15 +45,14 @@
         }
 
         ul {
-            list-style-type: disc;  /* Bullet points */
-            padding-left: 0;        /* Remove default left padding */
-            text-align: center;     /* Center the text within the list items */
-            margin: 0 auto;         /* Center the entire list horizontally */
-            display: flex;          /* Use flexbox to center the list */
-            flex-direction: column; /* Stack the list items vertically */
-            align-items: center;    /* Center items horizontally */
+            list-style-type: disc;
+            padding-left: 0;
+            text-align: center;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
 
         .button-container {
             margin-top: 30px;
@@ -76,7 +80,6 @@
             box-shadow: 1px 1px 5px #000;
         }
 
-        /* Home Button Styling */
         .home-button {
             position: absolute;
             top: 20px;
@@ -100,11 +103,22 @@
             transform: scale(1);
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
+
+        /* Keyframes for text animation */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px); /* Start slightly lower */
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0); /* End at the original position */
+            }
+        }
     </style>
 </head>
 
 <body>
-    <!-- Home Button -->
     <a href="/" class="home-button">Home</a>
 
     <h1> Join the Fight Against Evil!</h1>
@@ -124,10 +138,9 @@
         <p>The fate of the universe rests in your hands!</p>
     </div>
 
-    <!-- Button to begin the game or continue -->
     <div class="button-container">
-        <button onclick="window.location.href='/heroes'">Meet the Heroes</button> <!-- Redirect to Heroes list -->
-        <button onclick="window.location.href='/battle'">Enter the Battle</button> <!-- Change to /battle -->
+        <button onclick="window.location.href='/heroes'">Meet the Heroes</button>
+        <button onclick="window.location.href='/battle'">Enter the Battle</button>
     </div>
 
 </body>

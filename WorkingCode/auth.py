@@ -6,7 +6,7 @@ from oauthlib.oauth2 import WebApplicationClient
 # Google OAuth configuration
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI", "https://marvel-heroes-adventure.onrender.com/callback")  # Default to localhost for testing
+REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "https://marvel-heroes-adventure.onrender.com/callback")  # Dynamically use testing or production URI
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 # Ensure the environment variables are set
@@ -48,7 +48,7 @@ def get_google_user_info(auth_code):
         token_url, headers, body = client.prepare_token_request(
             token_endpoint,
             authorization_response=f"{REDIRECT_URI}?code={auth_code}",
-            redirect_uri=REDIRECT_URI,  # Use environment variable for dynamic configuration
+            redirect_url=REDIRECT_URI,  # Explicitly pass the redirect_uri
             client_id=GOOGLE_CLIENT_ID,
             client_secret=GOOGLE_CLIENT_SECRET,
         )
@@ -71,3 +71,4 @@ def get_google_user_info(auth_code):
         return userinfo_response.json()
     except Exception as e:
         raise RuntimeError(f"Failed to fetch user info: {e}")
+

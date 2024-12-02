@@ -52,18 +52,24 @@ function updateDropdowns() {
     heroSelect.innerHTML = '';
     enemySelect.innerHTML = '';
 
+    // Populate hero dropdown
     heroes.forEach((hero, index) => {
-        let option = document.createElement('option');
-        option.value = index;
-        option.textContent = hero.name;
-        heroSelect.appendChild(option);
+        if (hero.health > 0) { // Only include heroes that are still alive
+            let option = document.createElement('option');
+            option.value = index;
+            option.textContent = hero.name;
+            heroSelect.appendChild(option);
+        }
     });
 
+    // Populate enemy dropdown
     currentEnemies.forEach((enemy, index) => {
-        let option = document.createElement('option');
-        option.value = index;
-        option.textContent = enemy.name;
-        enemySelect.appendChild(option);
+        if (enemy.health > 0) { // Only include enemies that are still alive
+            let option = document.createElement('option');
+            option.value = index;
+            option.textContent = enemy.name;
+            enemySelect.appendChild(option);
+        }
     });
 }
 
@@ -108,6 +114,7 @@ function attackEnemy(hero, enemy) {
     checkHeroesHealth();
     displayEnemies();
     displayHeroes();
+    updateDropdowns(); // Refresh dropdowns after an attack
 }
 
 function useSpecialMove(hero, enemy) {
@@ -131,6 +138,7 @@ function useSpecialMove(hero, enemy) {
     checkHeroesHealth();
     displayEnemies();
     displayHeroes();
+    updateDropdowns(); // Refresh dropdowns after a special move
 }
 
 function handleEnemyDefeat(enemy) {

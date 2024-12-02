@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Start</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Welcome Back, {{ user_name }}!</h1>
+    <p>Your progress has been loaded.</p>
+    <p>Level: <span id="level">{{ level }}</span></p>
+    <p>Total HP: <span id="total-hp">{{ total_hp }}</span></p>
+    <button onclick="startGame()">Continue</button>
+
+    <script>
+        // Pass progress data to JavaScript
+        const progress = {{ progress | tojson }};
+        const level = {{ level }};
+        const totalHp = {{ total_hp }};
+
+        function startGame() {
+            // Initialize the game with the loaded progress
+            console.log("Progress loaded:", progress);
+            console.log("Level:", level, "Total HP:", totalHp);
+
+            // Redirect to the game screen or initialize your game logic here
+            window.location.href = "/game";
+        }
+    </script>
+</body>
+</html>

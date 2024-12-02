@@ -31,13 +31,6 @@
             margin-bottom: 15px;
         }
 
-        h3 {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            position: relative;
-            top: -100px;
-        }
-
         #hero-stats, #enemy-stats {
             margin-right: auto;
             margin-left: 50px;
@@ -47,6 +40,8 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            height: 150px;
+            overflow: hidden;
         }
 
         #heroes-list li, #enemies-list li {
@@ -62,10 +57,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 0;
-            margin-bottom: 20px;
+            margin-top: 10px;
             position: relative;
-            top: -150px;
+            top: -20px;
+            height: 150px;
+            justify-content: space-evenly;
+        }
+
+        #action-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         button {
@@ -79,8 +81,6 @@
             margin: 10px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 2px 2px 6px #000;
-            position: relative;
-            top: -150px;
         }
 
         button:hover {
@@ -107,11 +107,9 @@
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
             box-shadow: 2px 2px 5px #000;
-            width: 80%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 550px;
             text-align: center;
-            position: relative;
-            top: -120px;
         }
 
         .home-button {
@@ -125,7 +123,6 @@
             text-decoration: none;
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .home-button:hover {
@@ -137,6 +134,16 @@
             transform: scale(1);
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
+
+        .progress-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .progress-container p {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -145,8 +152,7 @@
 
     <h1>Marvel Heroes Adventure</h1>
 
-    <!-- Add the prompt phrase here -->
-    <p id="villain-prompt">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
+    <p id="battle-status">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
 
     <div id="hero-stats">
         <h2>Your Heroes</h2>
@@ -162,24 +168,53 @@
         </ul>
     </div>
 
-    <div id="actions">
-        <select id="hero-select" onchange="updateBattleStatus()">
-            <!-- Hero options will be dynamically populated -->
-        </select>
-
-        <span>is attacking</span>
-
-        <select id="enemy-select" onchange="updateBattleStatus()">
-            <!-- Enemy options will be dynamically populated -->
-        </select>
+    <div id="progress-container" class="progress-container">
+        <p>Total HP: <span id="total-hp">0</span></p>
+        <p>Level: <span id="level">1</span></p>
     </div>
 
-    <button onclick="performAction('attack')">Attack</button>
-    <button onclick="performAction('special')">Use Special Move</button>
+    <div id="actions">
+        <div id="action-controls">
+            <select id="hero-select" onchange="updateBattleStatus()">
+                <!-- Hero options will be dynamically populated -->
+            </select>
 
-    <h3>Battle Status</h3>
-    <p id="battle-status"></p>
+            <span>is attacking</span>
 
-    <script src="static/script.js"></script>
+            <select id="enemy-select" onchange="updateBattleStatus()">
+                <!-- Enemy options will be dynamically populated -->
+            </select>
+        </div>
+        <button onclick="performAction('attack')">Attack</button>
+        <button onclick="performAction('special')">Use Special Move</button>
+    </div>
+
+    <script>
+        function performAction(actionType) {
+            fetch('/attack', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    character: document.getElementById('hero-select').value,
+                    attack_type: actionType
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error);
+                } else {
+                    console.log(data.message);
+                    // Update total HP and level dynamically
+                    document.getElementById('total-hp').textContent = data.total_hp;
+                    document.getElementById('level').textContent = data.level;
+                    document.getElementById('battle-status').textContent = data.message;
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+    </script>
 </body>
 </html>

@@ -8,8 +8,8 @@ let heroes = [
     { name: 'Iron Man', health: 100, energy: 100 },
     { name: 'Captain America', health: 120, energy: 100 },
     { name: 'Thor', health: 150, energy: 100 },
-    { name: 'Spider-Man', health: 90, energy: 120 }, // Added Spider-Man
-    { name: 'Black Widow', health: 80, energy: 110 } // Added Black Widow
+    { name: 'Spider-Man', health: 90, energy: 100 }, // Added Spider-Man
+    { name: 'Black Widow', health: 80, energy: 100 } // Added Black Widow
 ];
 
 let battleOver = false;
@@ -24,6 +24,7 @@ function startBattle() {
 
 function displayHeroes() {
     let heroesList = document.getElementById('heroes-list');
+    if (!heroesList) return; // Prevent errors if element is missing
     heroesList.innerHTML = '';
     heroes.forEach(hero => {
         let li = document.createElement('li');
@@ -34,6 +35,7 @@ function displayHeroes() {
 
 function displayEnemies() {
     let enemiesList = document.getElementById('enemies-list');
+    if (!enemiesList) return; // Prevent errors if element is missing
     enemiesList.innerHTML = '';
     currentEnemies.forEach(enemy => {
         let li = document.createElement('li');
@@ -45,6 +47,8 @@ function displayEnemies() {
 function updateDropdowns() {
     let heroSelect = document.getElementById('hero-select');
     let enemySelect = document.getElementById('enemy-select');
+    if (!heroSelect || !enemySelect) return; // Prevent errors if elements are missing
+
     heroSelect.innerHTML = '';
     enemySelect.innerHTML = '';
 
@@ -64,10 +68,11 @@ function updateDropdowns() {
 }
 
 function performAction(action) {
+    // Stop all actions if the game is over
     if (battleOver) return;
 
-    let heroIndex = document.getElementById('hero-select').value;
-    let enemyIndex = document.getElementById('enemy-select').value;
+    let heroIndex = parseInt(document.getElementById('hero-select').value);
+    let enemyIndex = parseInt(document.getElementById('enemy-select').value);
 
     let hero = heroes[heroIndex];
     let enemy = currentEnemies[enemyIndex];
@@ -80,21 +85,22 @@ function performAction(action) {
 }
 
 function attackEnemy(hero, enemy) {
+    // 15% chance to miss the attack
+    if (Math.random() < 0.15) {
+        updateBattleStatus(`${hero.name} attacks ${enemy.name} but misses!`);
+        let counterStatus = enemyCounterAttack(hero);
+        updateBattleStatus(counterStatus, true); // Append counter-attack result
+        checkHeroesHealth();
+        return; // End the function early
+    }
+
     let damage = getRandomDamage(15, 25);
     enemy.health -= damage;
 
     let battleStatus = `${hero.name} attacks ${enemy.name} for ${damage} damage!`;
 
     if (enemy.health <= 0) {
-        battleStatus += `\n${enemy.name} has been defeated!`;
-        currentEnemies.splice(currentEnemies.indexOf(enemy), 1); // Remove defeated enemy
-
-        // Check if all enemies are defeated and Thanos hasn't been added yet
-        if (currentEnemies.length === 0 && !thanosDefeated) {
-            currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
-            battleStatus += "\nAll enemies defeated! Thanos appears!";
-            updateDropdowns();  // Update the dropdowns to include Thanos
-        }
+        battleStatus += handleEnemyDefeat(enemy);
     }
 
     let counterStatus = enemyCounterAttack(hero);
@@ -117,15 +123,7 @@ function useSpecialMove(hero, enemy) {
     let battleStatus = `${hero.name} uses a special move on ${enemy.name} for ${damage} damage!`;
 
     if (enemy.health <= 0) {
-        battleStatus += `\n${enemy.name} has been defeated!`;
-        currentEnemies.splice(currentEnemies.indexOf(enemy), 1); // Remove defeated enemy
-
-        // Check if all enemies are defeated and Thanos hasn't been added yet
-        if (currentEnemies.length === 0 && !thanosDefeated) {
-            currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
-            battleStatus += "\nAll enemies defeated! Thanos appears!";
-            updateDropdowns();  // Update the dropdowns to include Thanos
-        }
+        battleStatus += handleEnemyDefeat(enemy);
     }
 
     let counterStatus = enemyCounterAttack(hero);
@@ -135,7 +133,32 @@ function useSpecialMove(hero, enemy) {
     displayHeroes();
 }
 
+function handleEnemyDefeat(enemy) {
+    currentEnemies.splice(currentEnemies.indexOf(enemy), 1);
+
+    // Check if Thanos is defeated
+    if (enemy.name === 'Thanos') {
+        thanosDefeated = true;
+        battleOver = true; // Mark battle as over
+        showWinScreen(); // Show victory screen
+        return `\n${enemy.name} has been defeated! You have won the battle!`;
+    }
+
+    // If all other enemies are defeated and Thanos hasn't appeared yet
+    if (currentEnemies.length === 0 && !thanosDefeated) {
+        currentEnemies.push({ name: 'Thanos', health: 250, attackPower: 50 });
+        updateDropdowns();
+        return `\n${enemy.name} has been defeated! All enemies defeated! Thanos appears!`;
+    }
+
+    return `\n${enemy.name} has been defeated!`;
+}
+
 function enemyCounterAttack(hero) {
+    if (currentEnemies.length === 0) {
+        return "No enemies left to counter-attack!";
+    }
+
     let enemy = currentEnemies[Math.floor(Math.random() * currentEnemies.length)];
     let damage = getRandomDamage(enemy.attackPower - 5, enemy.attackPower + 5);
     hero.health -= damage;
@@ -145,6 +168,7 @@ function enemyCounterAttack(hero) {
     if (hero.health <= 0) {
         counterStatus += `\n${hero.name} has been defeated!`;
         heroes.splice(heroes.indexOf(hero), 1);
+        updateDropdowns(); // Ensure dropdowns reflect the updated heroes
     }
 
     return counterStatus;
@@ -164,6 +188,11 @@ function getRandomDamage(min, max) {
 
 function updateBattleStatus(statusText) {
     let battleStatusElement = document.getElementById('battle-status');
+    if (!battleStatusElement) return; // Prevent errors if element is missing
+
+    // Do not update status if the game is over
+    if (battleOver) return;
+
     battleStatusElement.textContent = statusText;
 }
 

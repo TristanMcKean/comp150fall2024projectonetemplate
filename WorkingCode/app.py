@@ -10,7 +10,7 @@ import os
 load_dotenv(dotenv_path=".env")
 
 import auth
-
+'''ignore'''
 
 # Debugging: Print variables to confirm they're loaded
 print("GOOGLE_CLIENT_ID:", os.getenv("GOOGLE_CLIENT_ID"))

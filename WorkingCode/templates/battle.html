@@ -31,56 +31,60 @@
             margin-bottom: 15px;
         }
 
-        #hero-stats, #enemy-stats {
-            margin-right: auto;
-            margin-left: 50px;
+        #container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
         }
 
-        #heroes-list, #enemies-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            height: 150px;
-            overflow: hidden;
+        #hero-enemy-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            width: 30%;
         }
 
-        #heroes-list li, #enemies-list li {
-            font-size: 1rem;
-            padding: 8px;
-            margin: 3px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px #000;
-        }
-
-        #actions {
+        #actions-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 10px;
-            position: relative;
-            top: -20px;
-            height: 150px;
-            justify-content: space-evenly;
+            width: 70%;
         }
 
-        #action-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            font-size: 1rem;
+            padding: 8px;
+            margin: 3px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px #000;
+            cursor: pointer;
+        }
+
+        .stat {
+            font-size: 0.9rem;
+            color: #bbb;
         }
 
         button {
             padding: 10px 20px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #fff;
             background-color: #e94560;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
+            box-shadow: 2px 2px 5px #000;
             transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 2px 2px 6px #000;
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -88,30 +92,36 @@
             transform: translateY(-2px);
         }
 
+        #battle-status {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px #000;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        #actions {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            align-items: center;
+        }
+
         select {
             padding: 10px;
             font-size: 1rem;
             border-radius: 5px;
-            margin: 5px;
             background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: none;
-            box-shadow: 2px 2px 6px #000;
-            text-align: center;
-        }
-
-        #battle-status {
-            font-size: 1rem;
-            margin-top: 5px;
-            padding: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
             box-shadow: 2px 2px 5px #000;
-            width: 90%;
-            max-width: 550px;
-            text-align: center;
         }
 
+        /* Home Button Styling */
         .home-button {
             position: absolute;
             top: 20px;
@@ -123,6 +133,7 @@
             text-decoration: none;
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .home-button:hover {
@@ -134,87 +145,148 @@
             transform: scale(1);
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
-
-        .progress-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .progress-container p {
-            font-size: 1.2rem;
-            margin: 5px 0;
-        }
     </style>
 </head>
 <body>
-    <!-- Home Button -->
+    <!-- Universal Home Button -->
     <a href="/" class="home-button">Home</a>
 
     <h1>Marvel Heroes Adventure</h1>
 
-    <p id="battle-status">Ultron, Hela, and Loki are attacking the city. Who do you want to fight first?</p>
+    <!-- Container for Hero and Enemy Panel and Action Panel -->
+    <div id="container">
+        <!-- Hero and Enemy Panel -->
+        <div id="hero-enemy-panel">
+            <div id="hero-stats">
+                <h2>Your Heroes</h2>
+                <ul id="heroes-list">
+                    <!-- Heroes will be dynamically populated -->
+                </ul>
+            </div>
 
-    <div id="hero-stats">
-        <h2>Your Heroes</h2>
-        <ul id="heroes-list">
-            <!-- Heroes will be dynamically populated -->
-        </ul>
-    </div>
-
-    <div id="enemy-stats">
-        <h2>Enemies</h2>
-        <ul id="enemies-list">
-            <!-- Enemies will be dynamically populated -->
-        </ul>
-    </div>
-
-    <div id="progress-container" class="progress-container">
-        <p>Total HP: <span id="total-hp">0</span></p>
-        <p>Level: <span id="level">1</span></p>
-    </div>
-
-    <div id="actions">
-        <div id="action-controls">
-            <select id="hero-select" onchange="updateBattleStatus()">
-                <!-- Hero options will be dynamically populated -->
-            </select>
-
-            <span>is attacking</span>
-
-            <select id="enemy-select" onchange="updateBattleStatus()">
-                <!-- Enemy options will be dynamically populated -->
-            </select>
+            <div id="enemy-stats">
+                <h2>Enemies</h2>
+                <ul id="enemies-list">
+                    <!-- Enemies will be dynamically populated here -->
+                </ul>
+            </div>
         </div>
-        <button onclick="performAction('attack')">Attack</button>
-        <button onclick="performAction('special')">Use Special Move</button>
+
+        <!-- Actions and Battle Status -->
+        <div id="actions-panel">
+            <p id="battle-status">Select an enemy to battle!</p>
+
+            <div id="action-controls">
+                <select id="hero-select" onchange="updateBattleStatus()">
+                    <!-- Heroes will be dynamically populated -->
+                </select>
+
+                <span>is attacking</span>
+
+                <select id="enemy-select" onchange="updateBattleStatus()">
+                    <!-- Enemies will be dynamically populated -->
+                </select>
+
+                <div>
+                    <button onclick="performAction('attack')">Attack</button>
+                    <button onclick="performAction('special')">Use Special Move</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script src="static/script.js"></script>
     <script>
-        function performAction(actionType) {
-            fetch('/attack', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    character: document.getElementById('hero-select').value,
-                    attack_type: actionType
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error(data.error);
-                } else {
-                    console.log(data.message);
-                    // Update total HP and level dynamically
-                    document.getElementById('total-hp').textContent = data.total_hp;
-                    document.getElementById('level').textContent = data.level;
-                    document.getElementById('battle-status').textContent = data.message;
-                }
-            })
-            .catch(err => console.error('Error:', err));
+        // Hero and Enemy Definitions
+        const enemies = [
+            { name: 'Loki', health: 100, attackPower: 10 },
+            { name: 'Ultron', health: 100, attackPower: 15 },
+            { name: 'Hela', health: 150, attackPower: 20 }
+        ];
+
+        const heroes = [
+            { name: 'Iron Man', health: 100, energy: 100, attackPower: 10 },
+            { name: 'Captain America', health: 120, energy: 100, attackPower: 12 },
+            { name: 'Thor', health: 150, energy: 100, attackPower: 15 },
+            { name: 'Spider-Man', health: 90, energy: 100, attackPower: 8 },
+            { name: 'Black Widow', health: 80, energy: 100, attackPower: 9 }
+        ];
+
+        // Create the enemies and heroes list dynamically
+        function createHeroesList() {
+            const heroListElement = document.getElementById('heroes-list');
+            heroes.forEach(hero => {
+                const heroItem = document.createElement('li');
+                heroItem.textContent = `${hero.name} - HP: ${hero.health}, Energy: ${hero.energy}`;
+                heroItem.onclick = () => selectHero(hero);
+                heroListElement.appendChild(heroItem);
+            });
         }
+
+        function createEnemiesList() {
+            const enemyListElement = document.getElementById('enemies-list');
+            enemies.forEach(enemy => {
+                const enemyItem = document.createElement('li');
+                enemyItem.textContent = `${enemy.name} - HP: ${enemy.health}`;
+                enemyItem.onclick = () => selectEnemy(enemy);
+                enemyListElement.appendChild(enemyItem);
+            });
+        }
+
+        // Update the battle status when hero or enemy is selected
+        function updateBattleStatus() {
+            const selectedHero = document.getElementById('hero-select').value;
+            const selectedEnemy = document.getElementById('enemy-select').value;
+            const battleStatus = document.getElementById('battle-status');
+            if (selectedHero && selectedEnemy) {
+                battleStatus.textContent = `${selectedHero} is battling ${selectedEnemy}!`;
+            }
+        }
+
+        // Select hero for battle
+        function selectHero(hero) {
+            document.getElementById('hero-select').value = hero.name;
+            updateBattleStatus();
+        }
+
+        // Select enemy for battle
+        function selectEnemy(enemy) {
+            document.getElementById('enemy-select').value = enemy.name;
+            updateBattleStatus();
+        }
+
+        // Handle the attack action
+        function performAction(action) {
+            const selectedHeroName = document.getElementById('hero-select').value;
+            const selectedEnemyName = document.getElementById('enemy-select').value;
+
+            if (!selectedHeroName || !selectedEnemyName) {
+                alert("Please select both a hero and an enemy!");
+                return;
+            }
+
+            const hero = heroes.find(h => h.name === selectedHeroName);
+            const enemy = enemies.find(e => e.name === selectedEnemyName);
+
+            if (action === 'attack') {
+                enemy.health -= hero.attackPower;
+            } else if (action === 'special') {
+                enemy.health -= hero.attackPower * 2;
+            }
+
+            if (enemy.health <= 0) {
+                enemy.health = 0;
+                alert(`${hero.name} defeated ${enemy.name}!`);
+            }
+
+            updateBattleStatus();
+        }
+
+        // Initialize lists when the page loads
+        window.onload = () => {
+            createHeroesList();
+            createEnemiesList();
+        };
     </script>
 </body>
 </html>

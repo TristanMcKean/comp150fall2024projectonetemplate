@@ -90,7 +90,6 @@ class Character:
         """Perform a basic attack using a given stat."""
         damage = stat.value + self.attack_power
         target.health -= damage
-        return damage
         print(f"{self.name} attacks {target.name} for {damage} damage!")
 
     def perform_special_move(self, target):
@@ -100,7 +99,6 @@ class Character:
             return
         damage = self.attack_power * 2
         target.health -= damage
-        return damage
         print(f"{self.name} uses a special move on {target.name} for {damage} damage!")
 
     def use_item(self, item: str):

@@ -71,4 +71,3 @@ def get_google_user_info(auth_code):
         return userinfo_response.json()
     except Exception as e:
         raise RuntimeError(f"Failed to fetch user info: {e}")
-

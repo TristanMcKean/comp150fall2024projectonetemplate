@@ -75,7 +75,7 @@
             margin-bottom: 30px;
             text-align: center;
             z-index: 1;
-            opacity: 1; /* Ensure visibility */
+            opacity: 1;
         }
 
         .game-intro ul {
@@ -161,20 +161,15 @@
     </div>
 
     <div id="welcome-text">
-        {% if user_name %}
-            <p>Welcome back, {{ user_name }}! Ready to continue your adventure?</p>
+        {% if is_logged_in %}
+            <p>Welcome back! Ready to enter the arena?</p>
+            <button onclick="window.location.href='/arena'">Enter the Arena</button>
         {% else %}
             <p>Your journey awaits. Sign in to track your progress or dive straight into the battle!</p>
+            <button onclick="window.location.href='/login'">Sign In with Google</button>
+            <button onclick="window.location.href='/arena'">Enter the Arena as a Guest</button>
         {% endif %}
     </div>
-
-    <!-- Buttons -->
-    {% if user_name %}
-        <button onclick="window.location.href='/gamestart'">Continue Adventure</button>
-    {% else %}
-        <button onclick="window.location.href='/login'">Sign In with Google</button>
-    {% endif %}
-    <button onclick="window.location.href='/arena'">Enter the Arena</button>
 </body>
 
 </html>

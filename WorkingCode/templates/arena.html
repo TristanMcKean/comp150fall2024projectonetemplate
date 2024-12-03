@@ -40,18 +40,11 @@
             animation-delay: 0.5s; /* Delayed start for smoother effect */
         }
 
-        .intro-text p {
-            margin: 10px 0;
-        }
-
-        ul {
-            list-style-type: disc;
-            padding-left: 0;
-            text-align: center;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .stats-container {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 5px #000;
+            color: #e94560;
         }
 
         .button-container {
@@ -121,7 +114,12 @@
 <body>
     <a href="/" class="home-button">Home</a>
 
-    <h1> Join the Fight Against Evil!</h1>
+    <h1>Join the Fight Against Evil!</h1>
+    <div class="stats-container">
+        <p>Total HP: <span id="total-hp">{{ total_hp }}</span></p>
+        <p>Level: <span id="level">{{ level }}</span></p>
+    </div>
+
     <div class="intro-text">
         <p>The world is in peril. Dark forces are gathering, and powerful enemies are attacking cities across the globe.</p>
         <p>Iron Man, Captain America, Thor, and other heroes have come together to protect humanity.</p>
@@ -142,7 +140,6 @@
         <button onclick="window.location.href='/heroes'">Meet the Heroes</button>
         <button onclick="window.location.href='/battle'">Enter the Battle</button>
     </div>
-
 </body>
 
 </html>

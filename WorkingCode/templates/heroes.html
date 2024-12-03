@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marvel Heroes - Meet the Heroes</title>
     <style>
-        /* General Body Styling */
+        /* Existing Styling */
         body {
             background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
             color: #f0f0f0;
@@ -23,6 +23,7 @@
             font-size: 3rem;
             text-shadow: 2px 2px 10px #000;
             margin-bottom: 30px;
+            color: #fff; /* White color for the heading */
         }
 
         .hero-list {
@@ -86,7 +87,6 @@
             box-shadow: 1px 1px 5px #000;
         }
 
-        /* Home Button Styling */
         .home-button {
             position: absolute;
             top: 20px;
@@ -109,6 +109,60 @@
         .home-button:active {
             transform: scale(1);
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Updated Section for Attack and Special Attack Information */
+        .battle-info {
+            margin-top: 50px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            padding: 30px 20px;
+            background-color: #1f2a36;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* White heading for battle info */
+        .battle-info h1 {
+            font-size: 2rem;
+            color: #fff;  /* White color for the heading */
+            margin-bottom: 30px;
+        }
+
+        .battle-info .info-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Individual info item containers */
+        .info-item {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 8px;
+            width: 250px;
+            margin: 10px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-item h3 {
+            font-size: 1.5rem;
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+
+        .info-item p {
+            font-size: 1rem;
+            color: #f0f0f0;
+        }
+
+        .info-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -153,6 +207,26 @@
         </div>
     </div>
 
+    <!-- New Section: Attack Information -->
+    <div class="battle-info">
+        <h1>How to Fight!👊🏼</h1>
+        <div class="info-container">
+            <!-- Regular Attack -->
+            <div class="info-item">
+                <h3>Attack</h3>
+                <p>Regular attacks deal standard damage to your enemy. These are your basic moves and can be used frequently in combat. </p>
+                <p>Remember! These attacks do not use any energy, but they also don't cause as much damage!</p>
+            </div>
+
+            <!-- Special Attack -->
+            <div class="info-item">
+                <h3>Special Move</h3>
+                <p>Special attacks unleash powerful moves that deal heavy damage or provide buffs. Use them strategically to turn the tide of battle in your favor. </p>
+                <p>Remember! Special moves cost energy! So make sure to keep an eye on your hero's health before attacking!</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Button to Return to Arena or Battle -->
     <div class="button-container">
         <button onclick="window.location.href='/arena'">Back to Arena</button>
@@ -160,4 +234,3 @@
 
 </body>
 </html>
-

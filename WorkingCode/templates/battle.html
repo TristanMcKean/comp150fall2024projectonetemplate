@@ -195,41 +195,42 @@
         </div>
     </div>
 
-    <script src="static/script.js"></script>
     <script>
-        // Hero and Enemy Definitions
-        const enemies = [
-            { name: 'Loki', health: 100, attackPower: 10 },
-            { name: 'Ultron', health: 100, attackPower: 15 },
-            { name: 'Hela', health: 150, attackPower: 20 }
-        ];
-
-        const heroes = [
-            { name: 'Iron Man', health: 100, energy: 100, attackPower: 10 },
-            { name: 'Captain America', health: 120, energy: 100, attackPower: 12 },
-            { name: 'Thor', health: 150, energy: 100, attackPower: 15 },
-            { name: 'Spider-Man', health: 90, energy: 100, attackPower: 8 },
-            { name: 'Black Widow', health: 80, energy: 100, attackPower: 9 }
-        ];
-
-        // Create the enemies and heroes list dynamically
-        function createHeroesList() {
+        // Fetch heroes from backend and populate the list
+        async function createHeroesList() {
+            const response = await fetch('/get_characters');
+            const heroes = await response.json();
             const heroListElement = document.getElementById('heroes-list');
+            const heroSelectElement = document.getElementById('hero-select');
+
             heroes.forEach(hero => {
                 const heroItem = document.createElement('li');
-                heroItem.textContent = `${hero.name} - HP: ${hero.health}, Energy: ${hero.energy}`;
-                heroItem.onclick = () => selectHero(hero);
+                heroItem.textContent = `${hero.name} - HP: ${hero.health}`;
                 heroListElement.appendChild(heroItem);
+
+                const heroOption = document.createElement('option');
+                heroOption.value = hero.name;
+                heroOption.textContent = hero.name;
+                heroSelectElement.appendChild(heroOption);
             });
         }
 
-        function createEnemiesList() {
+        // Fetch enemies from backend and populate the list
+        async function createEnemiesList() {
+            const response = await fetch('/get_characters');
+            const enemies = await response.json();
             const enemyListElement = document.getElementById('enemies-list');
+            const enemySelectElement = document.getElementById('enemy-select');
+
             enemies.forEach(enemy => {
                 const enemyItem = document.createElement('li');
                 enemyItem.textContent = `${enemy.name} - HP: ${enemy.health}`;
-                enemyItem.onclick = () => selectEnemy(enemy);
                 enemyListElement.appendChild(enemyItem);
+
+                const enemyOption = document.createElement('option');
+                enemyOption.value = enemy.name;
+                enemyOption.textContent = enemy.name;
+                enemySelectElement.appendChild(enemyOption);
             });
         }
 
@@ -243,20 +244,8 @@
             }
         }
 
-        // Select hero for battle
-        function selectHero(hero) {
-            document.getElementById('hero-select').value = hero.name;
-            updateBattleStatus();
-        }
-
-        // Select enemy for battle
-        function selectEnemy(enemy) {
-            document.getElementById('enemy-select').value = enemy.name;
-            updateBattleStatus();
-        }
-
-        // Handle the attack action
-        function performAction(action) {
+        // Handle the attack action and communicate with backend
+        async function performAction(action) {
             const selectedHeroName = document.getElementById('hero-select').value;
             const selectedEnemyName = document.getElementById('enemy-select').value;
 
@@ -265,21 +254,24 @@
                 return;
             }
 
-            const hero = heroes.find(h => h.name === selectedHeroName);
-            const enemy = enemies.find(e => e.name === selectedEnemyName);
+            const response = await fetch('/attack', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    character: selectedHeroName,
+                    attack_type: action
+                })
+            });
 
-            if (action === 'attack') {
-                enemy.health -= hero.attackPower;
-            } else if (action === 'special') {
-                enemy.health -= hero.attackPower * 2;
-            }
+            const result = await response.json();
+            alert(result.message);
 
-            if (enemy.health <= 0) {
-                enemy.health = 0;
-                alert(`${hero.name} defeated ${enemy.name}!`);
-            }
-
-            updateBattleStatus();
+            // Refresh the enemies list after the action
+            document.getElementById('enemies-list').innerHTML = '';
+            document.getElementById('enemy-select').innerHTML = '';
+            createEnemiesList();
         }
 
         // Initialize lists when the page loads

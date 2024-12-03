@@ -199,3 +199,4 @@ function restartGame() {
 window.onload = function () {
     startBattle();
 };
+'''ignore'

@@ -43,12 +43,15 @@
             margin-left: 50px;
         }
 
+        #enemy-stats {
+    margin-top: 50px; /* Increased margin for more space */
+}
+
         #heroes-list, #enemies-list {
             list-style-type: none;
             padding: 0;
             margin: 0;
             height: 150px; /* Fixed height for consistent layout */
-            overflow: hidden; /* Prevent overflow if content exceeds height */
         }
 
         #heroes-list li, #enemies-list li {
@@ -64,10 +67,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 10px; /* Reduced margin to raise section higher */
+            margin-top: 0px; /* Reduced margin to raise section higher */
             position: relative;
-            top: -20px; /* Adjusted top positioning to raise section */
-            height: 150px; /* Locked height */
+            top: -50px; /* Adjusted top positioning to raise section */
+            height: auto; /* Locked height */
             justify-content: space-evenly; /* Space out items evenly */
         }
 

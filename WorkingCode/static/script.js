@@ -30,9 +30,9 @@ const attackPhrases = [
 
 // Define phrases for when enemies are defeated
 const enemyDefeatPhrases = [
-    "{enemy} has been defeated! Good job, hero!",
-    "{enemy} is no more! You've won this round!",
-    "Victory! {enemy} has fallen!"
+    " {enemy} has been defeated! Good job, hero!",
+    " {enemy} is no more! You've won this round!",
+    " Victory! {enemy} has fallen!"
 ];
 
 // Helper function to replace placeholders with actual values
@@ -231,6 +231,9 @@ function updateBattleStatus(statusText) {
 }
 
 function showWinScreen() {
+    // Hide all game elements
+    hideGameElements();
+
     let battleStatus = document.getElementById('battle-status');
     battleStatus.innerHTML = `
         <h2>Victory Achieved!</h2>
@@ -241,11 +244,24 @@ function showWinScreen() {
 }
 
 function showGameOverScreen(message) {
+    // Hide all game elements
+    hideGameElements();
+
     let battleStatus = document.getElementById('battle-status');
     battleStatus.innerHTML = `
         <h2>${message}</h2>
         <button onclick="restartGame()">Try Again</button>
     `;
+}
+
+function hideGameElements() {
+    // Hide the action controls (dropdowns and buttons)
+    document.getElementById('actions').style.display = 'none';
+
+    // Hide the heroes and enemies list
+    document.getElementById('hero-stats').style.display = 'none';
+    document.getElementById('enemy-stats').style.display = 'none';
+
 }
 
 function restartGame() {
